@@ -1,57 +1,37 @@
 import React, { useState } from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-  } from 'react-router-dom';
 import Header from './components/Header';
 import NavBar from './components/NavBar';
 import TaskList from './components/TaskList';
 import RoutineList from './components/RoutineList';
-import AddItemPage from './components/AddItemPage';
-import ErrorBoundary from './components/ErrorBoundary.js';
+import AddTaskForm from './components/AddTaskForm';
 import './App.css';
 
 function App() {
   const [tasks, setTasks] = useState([]);
-  const [routines, setRoutines] = useState([]);
+  const [showAddTask, setShowAddTask] = useState(false);
 
-  const addTask = (newTask) => {
-    setTasks([...tasks, newTask]);
+  const handleAddTask = () => {
+    setShowAddTask(true);
   };
 
-  const addRoutine = (newRoutine) => {
-    setRoutines([...routines, newRoutine]);
+  const handleCloseModal = () => {
+    setShowAddTask(false);
+  };
+
+  const handleSaveTask = (taskContent) => {
+    setTasks([...tasks, { content: taskContent }]);
+    handleCloseModal();
   };
 
   return (
-    <Router>
-      <div className="App">
-        <Header />
-        <ErrorBoundary>
-          <Routes>
-            <Route path="/" element={
-              <>
-                <NavBar />
-                <TaskList tasks={tasks} />
-              </>
-            } />
-            <Route path="/routines" element={
-              <>
-                <NavBar />
-                <RoutineList routines={routines} />
-              </>
-            } />
-            <Route path="/add-item" element={
-              <AddItemPage 
-                onAddTask={addTask} 
-                onAddRoutine={addRoutine}
-              />
-            } />
-          </Routes>
-        </ErrorBoundary>
-      </div>
-    </Router>
+    <div className="App">
+      <Header />
+      <NavBar onAddTask={handleAddTask} />
+      <TaskList tasks={tasks} />
+      {showAddTask && (
+        <AddTaskForm onSaveTask={handleSaveTask} onClose={handleCloseModal} />
+      )}
+    </div>
   );
 }
 
