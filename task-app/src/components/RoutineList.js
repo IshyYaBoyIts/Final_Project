@@ -9,12 +9,17 @@ function RoutineList({ routines }) {
   return (
     <div className="routine-list">
       {routines.map((routine, index) => (
-        <div key={index} className="routine-item">
-          <h3>{routine.name}</h3>
-          <p>Description: {routine.description}</p> {/* Display the description */}
-          <p>Frequency: {routine.frequency}</p> {/* Display the frequency */}
-          {/* Add more details here if needed */}
+      <div key={index} className="list-item">
+        <div className="list-item-inner">
+          <div className="item-content">
+            <div className="item-detail">
+              <h3 className="item-name">{routine.name}</h3>
+              <p className="item-frequency">Frequency: {routine.frequency}</p>
+            </div>
+            {/* Include status indicator if needed */}
+          </div>
         </div>
+      </div>
       ))}
     </div>
   );

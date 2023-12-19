@@ -7,24 +7,72 @@
   color: #999;
 }
 
-.task-item, .routine-item {
-  background-color: var(--tertiary-color); /* Common background color for both */
-  padding: 10px;
+.task-list, .routine-list {
+  background-color: var(--tertiary-color); /* Tertiary color as background */
+  width: 95%; /* Fill 9% of its container's width */
+  margin: 10px auto; /* Center the list */
+  padding: 10px 0; /* Padding top and bottom */
+  border-radius: 8px; /* Curved corners for the list */
+}
+
+.list-item {
+  background-color: var(--tertiary-color); /* Tertiary color as background */
+  display: flex;
+  justify-content: center; /* Centering the inner content */
+  align-items: center;
+  width: 100%; /* Full width of the item */
   margin: 10px 0; /* Space between items */
-  border-radius: 5px; /* Rounded corners for items */
 }
 
-/* Horizontal line separator for items */
-.task-item:not(:last-child), .routine-item:not(:last-child) {
-  border-bottom: 1px solid var(--separator-color); /* Color for the separator line */
+.list-item-inner {
+  display: flex;
+  justify-content: space-between; /* Space out the content and status indicator */
+  align-items: center;
+  padding: 0 5%; /* Padding left and right */
+  width: 100%; /* Full width of the item */
 }
 
-/* Additional specific styles for task items, if needed */
-.task-item {
-  /* Specific styles for task items here */
+.item-content {
+  width: 80%; /* Width of the content area */
+  margin: auto; /* Center the content */
+  padding-bottom: 10px; /* Padding at the bottom of each item */
+  border-bottom: 5px solid #e0e0e0; /* Solid color for the separator line */
 }
 
-/* Additional specific styles for routine items, if needed */
-.routine-item {
-  /* Specific styles for routine items here */
+.item-detail {
+  display: flex;
+  flex-direction: column;
+  width: 80%; /* Width of the details area */
+}
+
+.item-name {
+  font-weight: bold;
+  margin-bottom: 4px; /* Space below the name */
+}
+
+.item-category, .item-due-date, .item-frequency {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 2px; /* Space between details */
+}
+
+/* Specific styles for status indicator */
+.status-indicator {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.status-indicator.green {
+  background-color: #5dfdcb; /* Primary color for completed tasks */
+}
+
+.status-indicator.orange {
+  background-color: #ffb347; /* Orange color for pending tasks */
+}
+
+.status-indicator.red {
+  background-color: #ff6961; /* Red color for overdue tasks */
 }
