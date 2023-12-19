@@ -25,7 +25,7 @@ function App() {
             {currentView === 'tasks' ? <TaskList tasks={tasks} /> : <RoutineList routines={routines} />}
           </>
         } />
-        <Route path="/add-item" element={<AddItemPage />} />
+        <Route path="/add-item" element={<AddItemPage setTasks={setTasks} setRoutines={setRoutines} />} />
       </Routes>
     </Router>
   );

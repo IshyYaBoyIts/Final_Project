@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import './styles/AddItemPage.css'; 
 
-function AddItemPage() {
-  const [isAddingTask, setIsAddingTask] = useState(true); // True for Task, false for Routine
+function AddItemPage({ setTasks, setRoutines }) {
+  const [isAddingTask, setIsAddingTask] = useState(true);
+  const [itemName, setItemName] = useState('');
+  const [description, setDescription] = useState('');
+  const [tag, setTag] = useState('');
+  const [date, setDate] = useState('');
+  const [frequency, setFrequency] = useState('');
 
-  // Function to handle form submission for both tasks and routines
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted");
+    if (isAddingTask) {
+      setTasks(prevTasks => [...prevTasks, { name: itemName, description, tag, date }]);
+    } else {
+      setRoutines(prevRoutines => [...prevRoutines, { name: itemName, description, frequency }]);
+    }
   };
 
   return (
@@ -17,16 +25,22 @@ function AddItemPage() {
         <button className={!isAddingTask ? 'active' : ''} onClick={() => setIsAddingTask(false)}>ROUTINE</button>
       </div>
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder={isAddingTask ? "Task name" : "Routine name"} />
-        <textarea placeholder="Add a description"></textarea>
-        {isAddingTask ? (
-          <>
-            <input type="text" placeholder="Select a tag" />
-            <input type="date" />
-          </>
-        ) : (
-          <input type="text" placeholder="Frequency" />
-        )}
+      <input type="text" placeholder={isAddingTask ? "Task name" : "Routine name"} value={itemName} onChange={e => setItemName(e.target.value)} />
+      <textarea placeholder="Add a description" value={description} onChange={e => setDescription(e.target.value)}></textarea>
+      {isAddingTask ? (
+        <>
+            <select id="tag" name="tag">
+              <option value="" disabled selected>Select a tag</option>
+              <option value="home">Home</option>
+              <option value="school">School</option>
+              <option value="work">Work</option>
+              <option value="project">Project</option>
+            </select>
+          <input type="date" value={date} onChange={e => setDate(e.target.value)} />
+        </>
+      ) : (
+        <input type="text" placeholder="Frequency" value={frequency} onChange={e => setFrequency(e.target.value)} />
+      )}
         <div className="actions">
           {/* Icons or buttons for actions like voice input, etc. */}
         </div>

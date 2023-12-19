@@ -25,7 +25,6 @@
   line-height: 50px;
 }
 
-/* Adjust the position to ensure it's centered */
 .add-button {
   position: absolute;
   bottom: 20px; /* Raise above the nav bar */

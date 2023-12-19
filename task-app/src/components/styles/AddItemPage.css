@@ -32,11 +32,17 @@ form {
 
 input[type="text"],
 input[type="date"],
-textarea {
+textarea,
+select { /* Add 'select' here */
   margin-bottom: 15px;
   padding: 10px;
   border-radius: 10px;
   border: 1px solid var(--quaternary-color); /* Your quaternary color */
+}
+
+/* Style for the dropdown options */
+select option {
+  padding: 10px;
 }
 
 .actions {
@@ -54,4 +60,3 @@ textarea {
   font-size: 16px;
 }
 
-/* Rest of your CSS for styling the page */
