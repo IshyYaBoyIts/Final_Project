@@ -1,8 +1,35 @@
 .nav-bar {
-    /* Styles for your navigation bar */
-  }
-  
-  .nav-bar a {
-    /* Styles for navigation links */
-  }
-  
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f8f8f8;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+}
+
+.add-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  background-color: #007bff;
+  border-radius: 50%;
+  color: white;
+  font-size: 30px;
+  text-decoration: none;
+  text-align: center;
+  line-height: 50px;
+}
+
+/* Adjust the position to ensure it's centered */
+.add-button {
+  position: absolute;
+  bottom: 20px; /* Raise above the nav bar */
+  left: 50%;
+  transform: translateX(-50%);
+}
+

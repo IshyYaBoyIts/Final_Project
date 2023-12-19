@@ -1,35 +1,31 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
+import NavBar from './components/NavBar';
 import TaskList from './components/TaskList';
 import RoutineList from './components/RoutineList';
 import AddItemPage from './components/AddItemPage';
-import NavBar from './components/NavBar';
+import Tabs from './components/Tabs';
 import './App.css';
 
 function App() {
-  // State for tasks and routines
-  const [tasks, setTasks] = useState([]);
-  const [routines, setRoutines] = useState([]);
+  const [currentView, setCurrentView] = useState('tasks'); // 'tasks' or 'routines'
+  const [tasks, setTasks] = useState([]); // Define tasks state
+  const [routines, setRoutines] = useState([]); // Define routines state
 
-  // Function to add a new task
-  const handleAddTask = (task) => {
-    setTasks([...tasks, task]);
-  };
-
-  // Function to add a new routine
-  const handleAddRoutine = (routine) => {
-    setRoutines([...routines, routine]);
-  };
 
   return (
     <Router>
+      <Header />
       <NavBar />
       <Routes>
-        <Route path="/" element={<TaskList tasks={tasks} />} />
-        <Route path="/routines" element={<RoutineList routines={routines} />} />
-        <Route path="/add-item" element={
-          <AddItemPage onAddTask={handleAddTask} onAddRoutine={handleAddRoutine} />
+        <Route path="/" element={
+          <>
+            <Tabs currentView={currentView} onChangeView={setCurrentView} />
+            {currentView === 'tasks' ? <TaskList tasks={tasks} /> : <RoutineList routines={routines} />}
+          </>
         } />
+        <Route path="/add-item" element={<AddItemPage />} />
       </Routes>
     </Router>
   );

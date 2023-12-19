@@ -3,14 +3,15 @@ import { Link } from 'react-router-dom';
 import './styles/NavBar.css';
 
 function NavBar() {
-  return (
-    <nav className="nav-bar">
-      {/* Define your navigation links using react-router-dom Link components */}
-      <Link to="/">Home</Link>
-      <Link to="/add-item">Add Item</Link>
-      {/* Add other navigation links as needed */}
-    </nav>
-  );
-}
-
-export default NavBar;
+    return (
+      <nav className="nav-bar">
+        {/* Other navigation links can go here */}
+        <Link to="/add-item" className="add-button">
+          {/* Use a plus icon or text */}
+          +
+        </Link>
+      </nav>
+    );
+  }
+  
+  export default NavBar;

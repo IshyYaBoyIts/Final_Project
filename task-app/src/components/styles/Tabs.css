@@ -1,0 +1,12 @@
+.tabs button {
+  padding: 10px 20px;
+  margin: 0 5px;
+  border: none;
+  background-color: var(--quaternary-color);
+  cursor: pointer;
+}
+
+.tabs button.active {
+  background-color: var(--primary-color);
+  color: white;
+}

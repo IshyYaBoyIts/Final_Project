@@ -1,4 +1,4 @@
-/* Same as in TaskList.css, or customize as needed */
+
 .empty-list {
     border: 2px dashed #ccc; /* Dashed border for the empty box */
     border-radius: 8px; /* Curved corners */
@@ -8,5 +8,13 @@
     color: #999;
   }
   
-  /* Rest of your styles... */
+  .task-item, .routine-item {
+    background-color: var(--tertiary-color);
+    
+  }
+  
+  /* Use quinary color for less important elements or for shadows */
+  .task-item {
+    box-shadow: 0 2px 5px var(--quinary-color);
+  }
   

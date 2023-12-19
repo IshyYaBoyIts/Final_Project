@@ -1,10 +1,57 @@
-.add-item-page {
-    /* Styles for the add item page */
-  }
-  
-  .tabs button {
-    /* Styles for tab buttons */
-  }
-  
-  /* Add styles for form fields */
-  
+.add-item-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  background-color: var(--secondary-color); /* Your secondary color */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.tabs button.active {
+  background-color: var(--primary-color); /* Your primary color */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+input[type="text"],
+input[type="date"],
+textarea {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--quaternary-color); /* Your quaternary color */
+}
+
+.actions {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 15px;
+}
+
+.create-button {
+  background-color: var(--primary-color); /* Your primary color */
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+}
+
+/* Rest of your CSS for styling the page */
