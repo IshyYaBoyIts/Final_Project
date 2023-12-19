@@ -1,23 +1,36 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import Header from './components/Header';
+import NavBar from './components/NavBar';
+import TaskList from './components/TaskList';
+import RoutineList from './components/RoutineList';
+import AddTaskForm from './components/AddTaskForm';
 import './App.css';
 
 function App() {
+  const [tasks, setTasks] = useState([]);
+  const [showAddTask, setShowAddTask] = useState(false);
+
+  const handleAddTask = () => {
+    setShowAddTask(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowAddTask(false);
+  };
+
+  const handleSaveTask = (taskContent) => {
+    setTasks([...tasks, { content: taskContent }]);
+    handleCloseModal();
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <NavBar onAddTask={handleAddTask} />
+      <TaskList tasks={tasks} />
+      {showAddTask && (
+        <AddTaskForm onSaveTask={handleSaveTask} onClose={handleCloseModal} />
+      )}
     </div>
   );
 }
