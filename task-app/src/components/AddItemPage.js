@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './styles/AddItemPage.css'; 
 
 function AddItemPage({ setTasks, setRoutines }) {
+  const navigate = useNavigate(); // Initialize useNavigate
   const [isAddingTask, setIsAddingTask] = useState(true);
   const [itemName, setItemName] = useState('');
   const [description, setDescription] = useState('');
-  const [tag, setTag] = useState('');
   const [date, setDate] = useState('');
   const [frequency, setFrequency] = useState('');
+  const [selectedTag, setSelectedTag] = useState(''); // State variable for the selected tag
+
+  const handleTagChange = (e) => {
+    setSelectedTag(e.target.value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (isAddingTask) {
-      setTasks(prevTasks => [...prevTasks, { name: itemName, description, tag, date }]);
+      setTasks(prevTasks => [...prevTasks, { name: itemName, description, tag: selectedTag, date }]);
     } else {
       setRoutines(prevRoutines => [...prevRoutines, { name: itemName, description, frequency }]);
     }
+    navigate('/'); // Navigate back to the main page
   };
 
   return (
@@ -29,8 +36,8 @@ function AddItemPage({ setTasks, setRoutines }) {
       <textarea placeholder="Add a description" value={description} onChange={e => setDescription(e.target.value)}></textarea>
       {isAddingTask ? (
         <>
-            <select id="tag" name="tag">
-              <option value="" disabled selected>Select a tag</option>
+            <select id="tag" name="tag" value={selectedTag} onChange={handleTagChange}>
+              <option value="" disabled>Select a tag</option>
               <option value="home">Home</option>
               <option value="school">School</option>
               <option value="work">Work</option>

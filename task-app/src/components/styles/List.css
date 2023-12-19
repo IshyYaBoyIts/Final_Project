@@ -1,0 +1,30 @@
+.empty-list {
+  border: 2px dashed #ccc; /* Dashed border for the empty box */
+  border-radius: 8px; /* Curved corners */
+  text-align: center;
+  padding: 20px;
+  margin: 20px;
+  color: #999;
+}
+
+.task-item, .routine-item {
+  background-color: var(--tertiary-color); /* Common background color for both */
+  padding: 10px;
+  margin: 10px 0; /* Space between items */
+  border-radius: 5px; /* Rounded corners for items */
+}
+
+/* Horizontal line separator for items */
+.task-item:not(:last-child), .routine-item:not(:last-child) {
+  border-bottom: 1px solid var(--separator-color); /* Color for the separator line */
+}
+
+/* Additional specific styles for task items, if needed */
+.task-item {
+  /* Specific styles for task items here */
+}
+
+/* Additional specific styles for routine items, if needed */
+.routine-item {
+  /* Specific styles for routine items here */
+}
