@@ -1,37 +1,57 @@
 import React, { useState } from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route
+  } from 'react-router-dom';
 import Header from './components/Header';
 import NavBar from './components/NavBar';
 import TaskList from './components/TaskList';
 import RoutineList from './components/RoutineList';
-import AddTaskForm from './components/AddTaskForm';
+import AddItemPage from './components/AddItemPage';
+import ErrorBoundary from './components/ErrorBoundary.js';
 import './App.css';
 
 function App() {
   const [tasks, setTasks] = useState([]);
-  const [showAddTask, setShowAddTask] = useState(false);
+  const [routines, setRoutines] = useState([]);
 
-  const handleAddTask = () => {
-    setShowAddTask(true);
+  const addTask = (newTask) => {
+    setTasks([...tasks, newTask]);
   };
 
-  const handleCloseModal = () => {
-    setShowAddTask(false);
-  };
-
-  const handleSaveTask = (taskContent) => {
-    setTasks([...tasks, { content: taskContent }]);
-    handleCloseModal();
+  const addRoutine = (newRoutine) => {
+    setRoutines([...routines, newRoutine]);
   };
 
   return (
-    <div className="App">
-      <Header />
-      <NavBar onAddTask={handleAddTask} />
-      <TaskList tasks={tasks} />
-      {showAddTask && (
-        <AddTaskForm onSaveTask={handleSaveTask} onClose={handleCloseModal} />
-      )}
-    </div>
+    <Router>
+      <div className="App">
+        <Header />
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/" element={
+              <>
+                <NavBar />
+                <TaskList tasks={tasks} />
+              </>
+            } />
+            <Route path="/routines" element={
+              <>
+                <NavBar />
+                <RoutineList routines={routines} />
+              </>
+            } />
+            <Route path="/add-item" element={
+              <AddItemPage 
+                onAddTask={addTask} 
+                onAddRoutine={addRoutine}
+              />
+            } />
+          </Routes>
+        </ErrorBoundary>
+      </div>
+    </Router>
   );
 }
 
