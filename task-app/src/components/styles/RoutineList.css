@@ -1,0 +1,12 @@
+/* Same as in TaskList.css, or customize as needed */
+.empty-list {
+    border: 2px dashed #ccc; /* Dashed border for the empty box */
+    border-radius: 8px; /* Curved corners */
+    text-align: center;
+    padding: 20px;
+    margin: 20px;
+    color: #999;
+  }
+  
+  /* Rest of your styles... */
+  
