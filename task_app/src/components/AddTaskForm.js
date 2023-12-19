@@ -1,29 +1,55 @@
 import React, { useState } from 'react';
-import './styles/AddTaskForm.css';
 
-function AddTaskForm({ onSaveTask, onClose }) {
-  const [taskContent, setTaskContent] = useState('');
+function AddTaskForm({ onAddTask }) {
+  const [taskName, setTaskName] = useState('');
+  const [taskDescription, setTaskDescription] = useState('');
+  const [taskTag, setTaskTag] = useState('');
+  const [taskDueDate, setTaskDueDate] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSaveTask(taskContent);
-    setTaskContent('');
-    onClose(); // Close the modal after saving
+    // Create a task object
+    const newTask = {
+      name: taskName,
+      description: taskDescription,
+      tag: taskTag,
+      dueDate: taskDueDate
+    };
+    // Call the onAddTask function passed from the parent component
+    onAddTask(newTask);
+    // Reset the form
+    setTaskName('');
+    setTaskDescription('');
+    setTaskTag('');
+    setTaskDueDate('');
   };
 
   return (
-    <div className="add-task-modal">
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Enter a new task"
-          value={taskContent}
-          onChange={(e) => setTaskContent(e.target.value)}
-        />
-        <button type="submit">Save Task</button>
-        <button type="button" onClick={onClose}>Cancel</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Task Name"
+        value={taskName}
+        onChange={(e) => setTaskName(e.target.value)}
+      />
+      <textarea
+        placeholder="Task Description"
+        value={taskDescription}
+        onChange={(e) => setTaskDescription(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Tag"
+        value={taskTag}
+        onChange={(e) => setTaskTag(e.target.value)}
+      />
+      <input
+        type="date"
+        value={taskDueDate}
+        onChange={(e) => setTaskDueDate(e.target.value)}
+      />
+      <button type="submit">Add Task</button>
+    </form>
   );
 }
 
