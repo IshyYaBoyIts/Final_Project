@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { AuthContext } from './AuthContext.js'; 
+import { getTasksFromDB } from './firebase-config.js'; 
 import './styles/List.css';
 
-function TaskList({ tasks }) {
+function TaskList() {
+  const { user } = useContext(AuthContext);
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    if (user) {
+      getTasksFromDB(user.uid).then(fetchedTasks => {
+        setTasks(fetchedTasks);
+      });
+    }
+  }, [user]);
   if (tasks.length === 0) {
     return <div className="empty-list">You have no Tasks</div>;
   }

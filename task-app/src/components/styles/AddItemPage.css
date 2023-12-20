@@ -12,7 +12,7 @@
 }
 
 .tabs button {
-  background-color: var(--secondary-color); /* Your secondary color */
+  background-color: var(--secondary-color); 
   color: white;
   border: none;
   padding: 10px 20px;
@@ -21,7 +21,7 @@
 }
 
 .tabs button.active {
-  background-color: var(--primary-color); /* Your primary color */
+  background-color: var(--primary-color);
 }
 
 form {
@@ -33,14 +33,13 @@ form {
 input[type="text"],
 input[type="date"],
 textarea,
-select { /* Add 'select' here */
+select { 
   margin-bottom: 15px;
   padding: 10px;
   border-radius: 10px;
-  border: 1px solid var(--quaternary-color); /* Your quaternary color */
+  border: 1px solid var(--quaternary-color); 
 }
 
-/* Style for the dropdown options */
 select option {
   padding: 10px;
 }
@@ -52,7 +51,7 @@ select option {
 }
 
 .create-button {
-  background-color: var(--primary-color); /* Your primary color */
+  background-color: var(--primary-color); 
   color: white;
   padding: 15px;
   border: none;

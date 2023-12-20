@@ -6,7 +6,7 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 10px 0;
+  padding: 2px 0;
   box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
 }
 
@@ -30,5 +30,18 @@
   bottom: 20px; /* Raise above the nav bar */
   left: 50%;
   transform: translateX(-50%);
+}
+.other-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;  /* Half the width of add-button */
+  height: 40px;  /* Half the height of add-button */
+  border-radius: 50%;
+  color: #007bff; /* Adjust color as needed */
+  font-size: 15px; /* Adjust font size as needed */
+  text-decoration: none;
+  text-align: center;
+  line-height: 25px;
 }
 

@@ -1,7 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { AuthContext } from './AuthContext.js'; 
+import { getRoutinesFromDB } from './firebase-config.js'; 
 import './styles/List.css';
 
-function RoutineList({ routines }) {
+function RoutineList() {
+  const { user } = useContext(AuthContext);
+  const [routines, setRoutines] = useState([]);
+
+  useEffect(() => {
+    if (user) {
+      getRoutinesFromDB(user.uid).then(fetchedRoutines => {
+        setRoutines(fetchedRoutines);
+      });
+    }
+  }, [user]);
+
   if (routines.length === 0) {
     return <div className="empty-list">You have no Routines</div>;
   }
@@ -9,14 +22,13 @@ function RoutineList({ routines }) {
   return (
     <div className="routine-list">
       {routines.map((routine, index) => (
-      <div key={index} className="list-item">
+        <div key={index} className="list-item">
         <div className="list-item-inner">
           <div className="item-content">
             <div className="item-detail">
               <h3 className="item-name">{routine.name}</h3>
               <p className="item-frequency">Frequency: {routine.frequency}</p>
             </div>
-            {/* Include status indicator if needed */}
           </div>
         </div>
       </div>

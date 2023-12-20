@@ -1,28 +1,45 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from './AuthContext.js'; 
+import { addTaskToDB, addRoutineToDB } from './firebase-config.js'; 
 import './styles/AddItemPage.css'; 
 
-function AddItemPage({ setTasks, setRoutines }) {
-  const navigate = useNavigate(); // Initialize useNavigate
+function AddItemPage() {
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext); 
   const [isAddingTask, setIsAddingTask] = useState(true);
   const [itemName, setItemName] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [frequency, setFrequency] = useState('');
-  const [selectedTag, setSelectedTag] = useState(''); // State variable for the selected tag
+  const [selectedTag, setSelectedTag] = useState(''); 
 
   const handleTagChange = (e) => {
     setSelectedTag(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isAddingTask) {
-      setTasks(prevTasks => [...prevTasks, { name: itemName, description, tag: selectedTag, date }]);
-    } else {
-      setRoutines(prevRoutines => [...prevRoutines, { name: itemName, description, frequency }]);
+    if (!user) {
+      // Handle the case when the user is not logged in
+      alert("Please log in to add tasks or routines."); // Replace with a better user interface feedback
+      return;
     }
-    navigate('/'); // Navigate back to the main page
+
+    const taskData = { name: itemName, description, tag: selectedTag, date };
+    console.log("Adding task:", taskData); // Log the data
+
+    try {
+      if (isAddingTask) {
+        await addTaskToDB(user.uid, { name: itemName, description, tag: selectedTag, date });
+      } else {
+        await addRoutineToDB(user.uid, { name: itemName, description, frequency });
+      }
+      navigate('/'); // Navigate back to the main page
+    } catch (error) {
+      console.error("Error adding task/routine: ", error);
+      alert("Failed to add task/routine. Please try again.");
+    }
   };
 
   return (

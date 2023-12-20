@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './components/AuthContext.js';
 import Header from './components/Header';
 import NavBar from './components/NavBar';
 import TaskList from './components/TaskList';
 import RoutineList from './components/RoutineList';
 import AddItemPage from './components/AddItemPage';
 import Tabs from './components/Tabs';
+import ProfilePage from './components/ProfilePage';
 import './App.css';
 
 function App() {
@@ -15,19 +17,22 @@ function App() {
 
 
   return (
-    <Router>
-      <Header />
-      <NavBar />
-      <Routes>
-        <Route path="/" element={
-          <>
-            <Tabs currentView={currentView} onChangeView={setCurrentView} />
-            {currentView === 'tasks' ? <TaskList tasks={tasks} /> : <RoutineList routines={routines} />}
-          </>
-        } />
-        <Route path="/add-item" element={<AddItemPage setTasks={setTasks} setRoutines={setRoutines} />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Header />
+        <NavBar />
+        <Routes>
+          <Route path="/" element={
+            <>
+              <Tabs currentView={currentView} onChangeView={setCurrentView} />
+              {currentView === 'tasks' ? <TaskList tasks={tasks} /> : <RoutineList routines={routines} />}
+            </>
+          } />
+          <Route path="/add-item" element={<AddItemPage setTasks={setTasks} setRoutines={setRoutines} />} />
+          <Route path="/profile" element={<ProfilePage />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

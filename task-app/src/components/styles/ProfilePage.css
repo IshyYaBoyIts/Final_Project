@@ -1,0 +1,28 @@
+.profile-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .profile-container {
+    background-color: var(--tertiary-color); /* Tertiary color as background */
+    border-radius: 8px;
+    width: 95%;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  
+  .profile-item {
+    background-color: #fff; /* White background for each item */
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .profile-item h2, .profile-item p {
+    margin: 0;
+    padding: 0;
+  }
+  

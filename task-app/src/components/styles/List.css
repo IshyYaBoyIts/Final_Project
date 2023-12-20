@@ -28,7 +28,6 @@
   display: flex;
   justify-content: space-between; /* Space out the content and status indicator */
   align-items: center;
-  padding: 0 5%; /* Padding left and right */
   width: 100%; /* Full width of the item */
 }
 
