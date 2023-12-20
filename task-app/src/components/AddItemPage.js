@@ -5,8 +5,9 @@ import { addTaskToDB, addRoutineToDB } from './firebase-config.js';
 import './styles/AddItemPage.css'; 
 
 function AddItemPage() {
+  const { currentUser } = useContext(AuthContext);
+  // console.log("Current user in AddItemPage:", currentUser);
   const navigate = useNavigate();
-  const { user } = useContext(AuthContext); 
   const [isAddingTask, setIsAddingTask] = useState(true);
   const [itemName, setItemName] = useState('');
   const [description, setDescription] = useState('');
@@ -20,24 +21,28 @@ function AddItemPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!user) {
-      // Handle the case when the user is not logged in
-      alert("Please log in to add tasks or routines."); // Replace with a better user interface feedback
+    if (!currentUser) {
+      alert("Please log in to add tasks or routines.");
       return;
     }
-
-    const taskData = { name: itemName, description, tag: selectedTag, date };
-    console.log("Adding task:", taskData); // Log the data
-
+  
     try {
       if (isAddingTask) {
-        await addTaskToDB(user.uid, { name: itemName, description, tag: selectedTag, date });
+        await addTaskToDB(currentUser.uid, {
+          name: itemName,
+          description,
+          tag: selectedTag,
+          date
+        });
       } else {
-        await addRoutineToDB(user.uid, { name: itemName, description, frequency });
+        await addRoutineToDB(currentUser.uid, {
+          name: itemName,
+          description,
+          frequency
+        });
       }
-      navigate('/'); // Navigate back to the main page
+      navigate('/');
     } catch (error) {
-      console.error("Error adding task/routine: ", error);
       alert("Failed to add task/routine. Please try again.");
     }
   };

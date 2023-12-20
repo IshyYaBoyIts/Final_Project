@@ -26,24 +26,17 @@ export const logout = () => {
 
 export const addTaskToDB = async (userId, newTask) => {
   try {
-    await addDoc(collection(db, "tasks"), {
-      userId,
-      ...newTask
-    });
+      await addDoc(collection(db, "tasks"), { userId, ...newTask });
   } catch (error) {
-    console.error("Error adding task to DB:", error);
-    throw error; // Or handle it as needed
+      console.error("Error adding task:", error);
   }
 };
+
 export const addRoutineToDB = async (userId, newRoutine) => {
   try {
-    await addDoc(collection(db, "routines"), {
-      userId,
-      ...newRoutine
-    });
+      await addDoc(collection(db, "routines"), { userId, ...newRoutine });
   } catch (error) {
-    console.error("Error adding routine to DB:", error);
-    throw error; // Or handle it as needed
+      console.error("Error adding routine:", error);
   }
 };
 
