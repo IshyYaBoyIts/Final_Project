@@ -24,21 +24,32 @@ export const logout = () => {
   return signOut(auth);
 };
 
-export const addTaskToDB = async (userId, newTask) => {
+export const addTaskToDB = async (newTask) => {
   try {
-      await addDoc(collection(db, "tasks"), { userId, ...newTask });
+    console.log("Attempting to add task with userId:", newTask.userId);
+    console.log("Task data:", newTask);
+    const docRef = await addDoc(collection(db, "tasks"), newTask);
+    console.log("Task added with ID:", docRef.id); // Log the document ID of the added task
   } catch (error) {
-      console.error("Error adding task:", error);
+    console.error("Error adding task:", error);
+    alert("Failed to add task. Please try again.");
   }
 };
 
-export const addRoutineToDB = async (userId, newRoutine) => {
+
+export const addRoutineToDB = async (newRoutine) => {
   try {
-      await addDoc(collection(db, "routines"), { userId, ...newRoutine });
+    console.log("Attempting to add routine with userId:", newRoutine.userId);
+    console.log("Routine data:", newRoutine);
+    const docRef = await addDoc(collection(db, "routines"), newRoutine);
+    console.log("Routine added with ID:", docRef.id);
   } catch (error) {
-      console.error("Error adding routine:", error);
+    console.error("Error adding routine:", error);
   }
 };
+
+
+
 
 export const getTasksFromDB = async (userId) => {
   const q = query(collection(db, "tasks"), where("userId", "==", userId));

@@ -28,24 +28,30 @@ function AddItemPage() {
   
     try {
       if (isAddingTask) {
-        await addTaskToDB(currentUser.uid, {
+        const newTask = {
+          userId: currentUser.uid,
           name: itemName,
           description,
           tag: selectedTag,
           date
-        });
+        };
+        await addTaskToDB(newTask);
       } else {
-        await addRoutineToDB(currentUser.uid, {
+        const newRoutine = {
+          userId: currentUser.uid,
           name: itemName,
           description,
           frequency
-        });
+        };
+        await addRoutineToDB(newRoutine);
       }
       navigate('/');
     } catch (error) {
+      console.error("Error adding task/routine:", error);
       alert("Failed to add task/routine. Please try again.");
     }
   };
+  
 
   return (
     <div className="add-item-container">
