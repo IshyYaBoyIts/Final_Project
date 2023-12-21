@@ -4,16 +4,16 @@ import { getRoutinesFromDB } from './firebase-config.js';
 import './styles/List.css';
 
 function RoutineList() {
-  const { user } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const [routines, setRoutines] = useState([]);
 
   useEffect(() => {
-    if (user) {
-      getRoutinesFromDB(user.uid).then(fetchedRoutines => {
+    if (currentUser) {
+      getRoutinesFromDB(currentUser.uid).then(fetchedRoutines => {
         setRoutines(fetchedRoutines);
       });
     }
-  }, [user]);
+  }, [currentUser]);
 
   if (routines.length === 0) {
     return <div className="empty-list">You have no Routines</div>;
