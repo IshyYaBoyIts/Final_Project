@@ -6,7 +6,6 @@ import './styles/AddItemPage.css';
 
 function AddItemPage() {
   const { currentUser } = useContext(AuthContext);
-  // console.log("Current user in AddItemPage:", currentUser);
   const navigate = useNavigate();
   const [isAddingTask, setIsAddingTask] = useState(true);
   const [itemName, setItemName] = useState('');

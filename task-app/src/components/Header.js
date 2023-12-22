@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { auth, logout } from './firebase-config'; // Adjust the path as needed
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import './styles/Header.css';
 
 function Header() {
@@ -30,13 +32,13 @@ function Header() {
     <header className="app-header">
       {location.pathname !== '/' && (
         <button onClick={handleBack} className="back-button">
-          Back
+          <FontAwesomeIcon icon={faChevronLeft} />
         </button>
       )}
       <h1>Task-App</h1>
       {location.pathname === '/profile' && user && (
         <button onClick={handleLogout} className="logout-button">
-          Logout
+          <FontAwesomeIcon icon={faRightFromBracket} />
         </button>
       )}
     </header>

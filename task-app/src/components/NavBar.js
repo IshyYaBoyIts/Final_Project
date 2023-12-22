@@ -19,10 +19,10 @@ const NavBar = () => {
       <FontAwesomeIcon icon={faChartSimple} />
       </Link>
       <Link to="/add-item" className="add-button">
-        <FontAwesomeIcon icon={faPlus} /> {/* Font Awesome Icon */}
+        <FontAwesomeIcon icon={faPlus} /> 
       </Link>
       <Link to="/profile" className="other-button">
-        <FontAwesomeIcon icon={faUser} /> {/* Font Awesome Icon */}
+        <FontAwesomeIcon icon={faUser} /> 
       </Link>
     </nav>
   );
