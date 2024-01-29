@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { signInWithGoogle, auth } from './firebase-config';
+import { signInWithGoogle, auth } from '../components/firebase-config.js';
 import './styles/ProfilePage.css';
 
 const ProfilePage = () => {

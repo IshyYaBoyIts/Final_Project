@@ -5,9 +5,9 @@ import Header from './components/Header';
 import NavBar from './components/NavBar';
 import TaskList from './components/TaskList';
 import RoutineList from './components/RoutineList';
-import AddItemPage from './components/AddItemPage';
+import AddItemPage from './pages/AddItemPage';
 import Tabs from './components/Tabs';
-import ProfilePage from './components/ProfilePage';
+import ProfilePage from './pages/ProfilePage';
 import './App.css';
 
 function App() {
