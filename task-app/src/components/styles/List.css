@@ -49,7 +49,7 @@
   margin-bottom: 4px; /* Space below the name */
 }
 
-.item-category, .item-due-date, .item-frequency {
+.item-category, .item-due-date, .item-frequency, item-description {
   color: #666;
   font-size: 0.9em;
   margin-bottom: 2px; /* Space between details */

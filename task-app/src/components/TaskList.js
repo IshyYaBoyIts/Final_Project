@@ -27,6 +27,7 @@ function TaskList() {
           <div className="item-content">
             <div className="item-detail">
               <h3 className="item-name">{task.name}</h3>
+              <h4 className="item-description">{task.description}</h4>
               <p className="item-category">{task.tag}</p>
               <p className="item-due-date">Due Date: {task.date}</p>
             </div>

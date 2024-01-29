@@ -20,23 +20,29 @@ const AddItemPage = () => {
   };
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const isSpeechRecognitionSupported = SpeechRecognition !== undefined;
+  const isSpeechRecognitionSupported = !!SpeechRecognition;
 
   let recognition;
   if (isSpeechRecognitionSupported) {
     recognition = new SpeechRecognition();
-    recognition.continuous = true;
+    recognition.continuous = false;
 
     recognition.onresult = (event) => {
-      const transcript = event.results[event.results.length - 1][0].transcript.trim();
+      const transcript = event.results[0][0].transcript.toLowerCase();
       console.log('Transcript:', transcript);
 
-      if (transcript.toLowerCase().startsWith('name')) {
-        setItemName(transcript.substring(5));
-      } else if (transcript.toLowerCase().startsWith('description')) {
-        setDescription(transcript.substring(13));
-      } else if (transcript.toLowerCase().startsWith('date')) {
-        setDate(transcript.substring(5));
+      const words = transcript.split(' ');
+      if (words.includes('name')) {
+        setItemName(transcript.split('name ')[1].split(' description')[0]);
+      }
+      if (words.includes('description')) {
+        setDescription(transcript.split('description ')[1].split(' tag')[0]);
+      }
+      if (words.includes('tag')) {
+        setSelectedTag(transcript.split('tag ')[1].split(' date')[0]);
+      }
+      if (words.includes('date')) {
+        setDate(transcript.split('date ')[1]);
       }
 
       setIsListening(false);
