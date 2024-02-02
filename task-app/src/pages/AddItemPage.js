@@ -15,9 +15,7 @@ const AddItemPage = () => {
   const [selectedTag, setSelectedTag] = useState('');
   const [isListening, setIsListening] = useState(false);
 
-  const handleTagChange = (e) => {
-    setSelectedTag(e.target.value);
-  };
+  const handleTagChange = (e) => setSelectedTag(e.target.value);
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const isSpeechRecognitionSupported = !!SpeechRecognition;
@@ -25,25 +23,49 @@ const AddItemPage = () => {
   let recognition;
   if (isSpeechRecognitionSupported) {
     recognition = new SpeechRecognition();
-    recognition.continuous = false;
+    recognition.continuous = false; // Set to false to not keep listening after capturing the input
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript.toLowerCase();
       console.log('Transcript:', transcript);
 
+      // Split transcript into words to better handle different parts
       const words = transcript.split(' ');
-      if (words.includes('name')) {
-        setItemName(transcript.split('name ')[1].split(' description')[0]);
-      }
-      if (words.includes('description')) {
-        setDescription(transcript.split('description ')[1].split(' tag')[0]);
-      }
-      if (words.includes('tag')) {
-        setSelectedTag(transcript.split('tag ')[1].split(' date')[0]);
-      }
-      if (words.includes('date')) {
-        setDate(transcript.split('date ')[1]);
-      }
+      
+      // Parse for 'name', 'description', 'tag', and attempt to parse 'date'
+      let tempName = '', tempDescription = '', tempTag = '', tempDate = '';
+
+      let currentIndex = 0;
+      words.forEach((word, index) => {
+        if (word.includes('name')) {
+          currentIndex = index + 1;
+          while (currentIndex < words.length && !['description', 'tag', 'date'].includes(words[currentIndex])) {
+            tempName += words[currentIndex] + ' ';
+            currentIndex++;
+          }
+        } else if (word.includes('description')) {
+          currentIndex = index + 1;
+          while (currentIndex < words.length && !['name', 'tag', 'date'].includes(words[currentIndex])) {
+            tempDescription += words[currentIndex] + ' ';
+            currentIndex++;
+          }
+        } else if (word.includes('tag')) {
+          currentIndex = index + 1;
+          if (currentIndex < words.length) tempTag = words[currentIndex];
+        } else if (word.includes('date')) {
+          currentIndex = index + 1;
+          while (currentIndex < words.length && !['name', 'description', 'tag'].includes(words[currentIndex])) {
+            tempDate += words[currentIndex] + ' ';
+            currentIndex++;
+          }
+        }
+      });
+
+      setItemName(tempName.trim());
+      setDescription(tempDescription.trim());
+      setSelectedTag(tempTag.trim());
+      // Handle date conversion here
+      setDate(parseDateFromTranscript(tempDate.trim()));
 
       setIsListening(false);
     };
@@ -70,6 +92,12 @@ const AddItemPage = () => {
     }
   };
 
+  const parseDateFromTranscript = (transcriptDate) => {
+    // You can enhance this function to convert spoken dates to your desired format
+    // This is a basic example and might need adjustments based on your requirements
+    return transcriptDate; // Return as is for now
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!currentUser) {
@@ -77,6 +105,7 @@ const AddItemPage = () => {
       return;
     }
 
+    // Submission logic remains the same
     try {
       if (isAddingTask) {
         const newTask = {
@@ -140,7 +169,7 @@ const AddItemPage = () => {
           )}
         </>
       ) : (
-        <p>Speech recognition not supported</p>
+        <p>Speech recognition not supported, try using Google Chrome</p>
       )}
     </div>
   );
