@@ -4,8 +4,6 @@ import { AuthContext } from '../components/firebase/AuthContext';
 import { addTaskToDB, addRoutineToDB } from '../components/firebase/firebase-config';
 import VoiceRecognition from '../components/voiceUtils/VoiceRecognitionTask';
 import { processTranscript } from '../components/voiceUtils/SpeechProcessing';
-
-
 import './styles/AddItemPage.css';
 
 const AddItemPage = () => {

@@ -1,10 +1,10 @@
-import { db } from './firebase-config'; // Import your Firebase Firestore instance from firebase-config.js
+import { db } from './firebase-config'; 
 import { doc, updateDoc } from 'firebase/firestore';
 
 // Function to update the user's theme in Firestore
 export const updateThemeInFirestore = async (userId, newTheme) => {
   try {
-    const userDocRef = doc(db, 'users', userId); // Assuming you have a 'users' collection in Firestore
+    const userDocRef = doc(db, 'users', userId); 
 
     // Update the 'theme' field in the user's document
     await updateDoc(userDocRef, {
