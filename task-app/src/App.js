@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './components/AuthContext.js';
+import { AuthProvider } from './components/firebase/AuthContext.js';
 import Header from './components/Header';
 import NavBar from './components/NavBar';
 import TaskList from './components/TaskList';

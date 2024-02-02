@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../components/AuthContext';
-import { addTaskToDB, addRoutineToDB } from '../components/firebase-config';
+import { AuthContext } from '../components/firebase/AuthContext';
+import { addTaskToDB, addRoutineToDB } from '../components/firebase/firebase-config';
 import VoiceRecognition from '../components/voiceUtils/VoiceRecognitionTask';
 import { processTranscript } from '../components/voiceUtils/SpeechProcessing';
 

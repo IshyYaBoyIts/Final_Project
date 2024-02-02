@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { AuthContext } from './AuthContext.js'; 
-import { getRoutinesFromDB } from './firebase-config.js'; 
+import { AuthContext } from './firebase/AuthContext.js'; 
+import { getRoutinesFromDB } from './firebase/firebase-config.js'; 
 import './styles/List.css';
 
 function RoutineList() {

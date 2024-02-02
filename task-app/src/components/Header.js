@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { auth, logout } from './firebase-config'; // Adjust the path as needed
+import { auth, logout } from './firebase/firebase-config'; // Adjust the path as needed
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import './styles/Header.css';
