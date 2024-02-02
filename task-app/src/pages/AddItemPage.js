@@ -22,13 +22,16 @@ const AddItemPage = () => {
   const handleTagChange = (e) => setSelectedTag(e.target.value);
 
   const onTranscriptReceived = (transcript) => {
-    const processingResult = processTranscript(transcript);
-    setItemName(processingResult.name);
-    setDescription(processingResult.description);
-    setDate(processingResult.date);
-    setSelectedTag(processingResult.tag);
-    setIsListening(false); // Optionally stop listening once the transcript is received
-  };
+    console.log('Transcript:', transcript);
+    const processed = processTranscript(transcript);
+    // Assuming processTranscript correctly fills the processed object
+    setItemName(processed.name);
+    setDescription(processed.description);
+    setSelectedTag(processed.tag);
+    // Use formatDateFromSpeech if necessary or ensure processTranscript handles date formatting
+    setDate(processed.date);
+    setIsListening(false); // Turn off listening once processed
+};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
