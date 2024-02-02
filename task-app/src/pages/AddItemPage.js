@@ -1,9 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../components/AuthContext';
-import VoiceRecognition from '../components/VoiceRecProcessing/VoiceRecognition';
 import { addTaskToDB, addRoutineToDB } from '../components/firebase-config';
-import { processTranscript } from '../components/VoiceRecProcessing/SpeechProcessing';
+import VoiceRecognition from '../components/voiceUtils/VoiceRecognitionTask';
+import { processTranscript } from '../components/voiceUtils/SpeechProcessing';
+
+
 import './styles/AddItemPage.css';
 
 const AddItemPage = () => {
