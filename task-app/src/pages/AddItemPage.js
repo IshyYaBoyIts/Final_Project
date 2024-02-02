@@ -23,49 +23,26 @@ const AddItemPage = () => {
   let recognition;
   if (isSpeechRecognitionSupported) {
     recognition = new SpeechRecognition();
-    recognition.continuous = false; // Set to false to not keep listening after capturing the input
+    recognition.continuous = false;
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript.toLowerCase();
       console.log('Transcript:', transcript);
 
-      // Split transcript into words to better handle different parts
       const words = transcript.split(' ');
-      
-      // Parse for 'name', 'description', 'tag', and attempt to parse 'date'
-      let tempName = '', tempDescription = '', tempTag = '', tempDate = '';
-
-      let currentIndex = 0;
-      words.forEach((word, index) => {
-        if (word.includes('name')) {
-          currentIndex = index + 1;
-          while (currentIndex < words.length && !['description', 'tag', 'date'].includes(words[currentIndex])) {
-            tempName += words[currentIndex] + ' ';
-            currentIndex++;
-          }
-        } else if (word.includes('description')) {
-          currentIndex = index + 1;
-          while (currentIndex < words.length && !['name', 'tag', 'date'].includes(words[currentIndex])) {
-            tempDescription += words[currentIndex] + ' ';
-            currentIndex++;
-          }
-        } else if (word.includes('tag')) {
-          currentIndex = index + 1;
-          if (currentIndex < words.length) tempTag = words[currentIndex];
-        } else if (word.includes('date')) {
-          currentIndex = index + 1;
-          while (currentIndex < words.length && !['name', 'description', 'tag'].includes(words[currentIndex])) {
-            tempDate += words[currentIndex] + ' ';
-            currentIndex++;
-          }
-        }
-      });
-
-      setItemName(tempName.trim());
-      setDescription(tempDescription.trim());
-      setSelectedTag(tempTag.trim());
-      // Handle date conversion here
-      setDate(parseDateFromTranscript(tempDate.trim()));
+      if (words.includes('name')) {
+        setItemName(transcript.split('name ')[1].split(' description')[0]);
+      }
+      if (words.includes('description')) {
+        setDescription(transcript.split('description ')[1].split(' tag')[0]);
+      }
+      if (words.includes('tag')) {
+        setSelectedTag(transcript.split('tag ')[1].split(' date')[0]);
+      }
+      if (words.includes('date')) {
+        const dateText = transcript.split('date ')[1];
+        setDate(parseDateFromSpeech(dateText));
+      }
 
       setIsListening(false);
     };
@@ -92,11 +69,36 @@ const AddItemPage = () => {
     }
   };
 
-  const parseDateFromTranscript = (transcriptDate) => {
-    // You can enhance this function to convert spoken dates to your desired format
-    // This is a basic example and might need adjustments based on your requirements
-    return transcriptDate; // Return as is for now
+  const parseDateFromSpeech = (transcriptDate) => {
+    // Assuming transcriptDate is in the format "dd mm yyyy" or "dd mm yy"
+    let parts = transcriptDate.split(' ');
+  
+    // Basic validation to ensure we have at least day and month
+    if (parts.length < 2) return '';
+  
+    let day = parts[0];
+    let month = parts[1];
+    let year = parts.length === 3 ? parts[2] : new Date().getFullYear().toString().substr(-2); // Default to current year if year is not specified
+  
+    // Pad single digit day and month with zero
+    day = day.padStart(2, '0');
+    month = month.padStart(2, '0');
+  
+    // Handle two-digit year format by determining century
+    if (year.length === 2) {
+      let currentYear = new Date().getFullYear();
+      let currentCentury = Math.floor(currentYear / 100) * 100;
+      year = currentCentury + parseInt(year, 10);
+    }
+  
+    // Return date in YYYY-MM-DD format
+    return `${year}-${month}-${day}`;
   };
+  
+  // Example usage:
+  console.log(parseDateFromSpeech("21 04 2023")); // "2023-04-21"
+  console.log(parseDateFromSpeech("5 12 22")); // Assuming current year is 2023, "2022-12-05"
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -105,7 +107,6 @@ const AddItemPage = () => {
       return;
     }
 
-    // Submission logic remains the same
     try {
       if (isAddingTask) {
         const newTask = {
@@ -139,23 +140,19 @@ const AddItemPage = () => {
         <button className={!isAddingTask ? 'active' : ''} onClick={() => setIsAddingTask(false)}>ROUTINE</button>
       </div>
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder={isAddingTask ? "Task name" : "Routine name"} value={itemName} onChange={e => setItemName(e.target.value)} />
-        <textarea placeholder="Add a description" value={description} onChange={e => setDescription(e.target.value)}></textarea>
-        {isAddingTask ? (
-          <>
-            <select id="tag" name="tag" value={selectedTag} onChange={handleTagChange}>
-              <option value="" disabled>Select a tag</option>
-              <option value="home">Home</option>
-              <option value="school">School</option>
-              <option value="work">Work</option>
-              <option value="project">Project</option>
-            </select>
-            <input type="date" value={date} onChange={e => setDate(e.target.value)} />
-          </>
-        ) : (
-          <input type="text" placeholder="Frequency" value={frequency} onChange={e => setFrequency(e.target.value)} />
+        <input type="text" placeholder="Task name or Routine name" value={itemName} onChange={(e) => setItemName(e.target.value)} />
+        <textarea placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+        {isAddingTask && (
+          <select value={selectedTag} onChange={handleTagChange}>
+            <option value="" disabled>Select a tag</option>
+            <option value="home">Home</option>
+            <option value="school">School</option>
+            <option value="work">Work</option>
+            <option value="project">Project</option>
+          </select>
         )}
-        <button type="submit" className="create-button">{isAddingTask ? "Create task" : "Create routine"}</button>
+        {isAddingTask ? <input type="date" value={date} onChange={(e) => setDate(e.target.value)} /> : <input type="text" placeholder="Frequency" value={frequency} onChange={(e) => setFrequency(e.target.value)} />}
+        <button type="submit" className="create-button">{isAddingTask ? "Add Task" : "Add Routine"}</button>
       </form>
       {isSpeechRecognitionSupported ? (
         <>
