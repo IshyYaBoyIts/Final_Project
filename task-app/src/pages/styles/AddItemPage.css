@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%; /* Ensure full width */
   padding: 20px;
 }
 
@@ -12,50 +13,80 @@
 }
 
 .tabs button {
-  background-color: var(--secondary-color); 
+  background-color: var(--secondary-color);
   color: white;
   border: none;
   padding: 10px 20px;
   margin: 0 5px;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .tabs button.active {
   background-color: var(--primary-color);
 }
 
-form {
+.form-item {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 100%; /* Adjusted to full width */
+  max-width: 800px; /* Limit max width */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  align-items: center; /* Center align the form contents */
 }
 
-input[type="text"],
-input[type="date"],
-textarea,
-select { 
-  margin-bottom: 15px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid var(--quaternary-color); 
-}
-
-select option {
-  padding: 10px;
-}
-
-.actions {
-  display: flex;
-  justify-content: space-around;
+.form-group {
+  width: 100%; /* Ensure form group takes full width */
   margin-bottom: 15px;
 }
 
-.create-button {
-  background-color: var(--primary-color); 
-  color: white;
-  padding: 15px;
+.form-control, .submit-btn, .listen-btn {
+  width: 100%; /* Form controls and buttons take full width */
+  padding: 10px;
+  margin-bottom: 15px; /* Adjust spacing */
+}
+
+.submit-btn, .listen-btn {
   border: none;
-  border-radius: 20px;
-  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
+.submit-btn {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.listen-btn {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.submit-btn:hover, .listen-btn:hover {
+  opacity: 0.8; /* Slightly reduce opacity on hover for a subtle effect */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .form-item, .form-group, .form-control, .submit-btn, .listen-btn {
+    padding: 8px; /* Reduce padding for smaller devices */
+  }
+
+  .tabs button {
+    padding: 8px 16px; /* Adjust button size for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .form-item {
+    padding: 10px; /* Further reduce padding for very small devices */
+  }
+
+  .form-control, .submit-btn, .listen-btn {
+    font-size: 14px; /* Reduce font size for better fit on small screens */
+  }
+}

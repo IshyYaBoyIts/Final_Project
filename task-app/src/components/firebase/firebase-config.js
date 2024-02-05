@@ -25,16 +25,16 @@ export const logout = () => {
   return signOut(auth);
 };
 
-export const addTaskToDB = async (newTask) => {
+export const addTaskToDB = async (userId, newTask) => {
   try {
-    const docRef = await addDoc(collection(db, "tasks"), newTask);
+    const taskWithCompletion = { ...newTask, isComplete: false }; // Add isComplete flag
+    const docRef = await addDoc(collection(db, "tasks"), taskWithCompletion);
     console.log("Task added with ID:", docRef.id); // Log the document ID of the added task
   } catch (error) {
     console.error("Error adding task:", error);
     alert("Failed to add task. Please try again.");
   }
 };
-
 
 export const addRoutineToDB = async (newRoutine) => {
   try {
