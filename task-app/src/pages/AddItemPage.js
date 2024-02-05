@@ -4,7 +4,9 @@ import { AuthContext } from '../components/firebase/AuthContext';
 import { addTaskToDB, addRoutineToDB } from '../components/firebase/firebase-config';
 import VoiceRecognition from '../components/voiceUtils/VoiceRecognitionTask';
 import { processTranscript } from '../components/voiceUtils/SpeechProcessing';
+import { formatDateFromSpeech } from '../components/voiceUtils/DateProcessing';
 import './styles/AddItemPage.css';
+
 
 const AddItemPage = () => {
   const { currentUser } = useContext(AuthContext);
@@ -20,16 +22,17 @@ const AddItemPage = () => {
   const handleTagChange = (e) => setSelectedTag(e.target.value);
 
   const onTranscriptReceived = (transcript) => {
-    console.log('Transcript:', transcript);
+    console.log('Transcript received:', transcript);
     const processed = processTranscript(transcript);
-    // Assuming processTranscript correctly fills the processed object
+    console.log('Processed data:', processed);
     setItemName(processed.name);
     setDescription(processed.description);
     setSelectedTag(processed.tag);
     // Use formatDateFromSpeech if necessary or ensure processTranscript handles date formatting
+    console.log('Setting date:', processed.date);
     setDate(processed.date);
     setIsListening(false); // Turn off listening once processed
-};
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
