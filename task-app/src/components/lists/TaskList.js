@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { AuthContext } from './firebase/AuthContext.js'; 
-import { getTasksFromDB } from './firebase/firebase-config.js'; 
+import { AuthContext } from '../firebase/AuthContext.js'; 
+import { getTasksFromDB } from '../firebase/firebase-config.js'; 
 import './styles/List.css';
 
 function TaskList() {

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { AuthContext } from './firebase/AuthContext';
-import { addRoutineToDB } from './firebase/firebase-config';
+import { AuthContext } from '../firebase/AuthContext';
+import { addRoutineToDB } from '../firebase/firebase-config';
 import './styles/AddComponent.css';
 
 const RoutineComponent = ({ onRoutineAdded }) => {

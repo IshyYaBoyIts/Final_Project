@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './components/firebase/AuthContext.js';
-import Header from './components/Header';
-import NavBar from './components/NavBar';
-import TaskList from './components/TaskList';
-import RoutineList from './components/RoutineList';
+import Header from './components/navigation/Header.js';
+import NavBar from './components/navigation/NavBar.js';
+import TaskList from './components/lists/TaskList.js';
+import RoutineList from './components/lists/RoutineList.js';
 import AddItemPage from './pages/AddItemPage';
-import Tabs from './components/Tabs';
+import Tabs from './components/navigation/Tabs.js';
 import ProfilePage from './pages/ProfilePage';
 import './App.css';
 

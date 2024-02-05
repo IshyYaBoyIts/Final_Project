@@ -1,9 +1,9 @@
 // TaskComponent.js
 import React, { useState, useContext } from 'react';
-import { AuthContext } from './firebase/AuthContext';
-import { addTaskToDB } from './firebase/firebase-config';
-import VoiceRecognition from './voiceUtils/VoiceRecognitionTask';
-import { processTranscript } from './voiceUtils/SpeechProcessing';
+import { AuthContext } from '../firebase/AuthContext';
+import { addTaskToDB } from '../firebase/firebase-config';
+import VoiceRecognition from '../voiceUtils/VoiceRecognitionTask';
+import { processTranscript } from '../voiceUtils/SpeechProcessing';
 import './styles/AddComponent.css';
 
 const TaskComponent = ({ onTaskAdded }) => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { signInWithGoogle, auth, db } from '../components/firebase/firebase-config'; // Ensure these imports are correct
-import ThemeSelector from '../components/ThemeSelector';
+import ThemeSelector from '../components/theme/ThemeSelector';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'; // Correct imports for Firestore operations
 import './styles/ProfilePage.css';
 
