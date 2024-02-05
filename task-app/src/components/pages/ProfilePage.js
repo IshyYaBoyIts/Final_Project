@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { signInWithGoogle, auth, db } from '../components/firebase/firebase-config'; // Ensure these imports are correct
+import { signInWithGoogle, auth, db } from '../components/firebase/firebase-config';
 import ThemeSelector from '../components/theme/ThemeSelector';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'; // Correct imports for Firestore operations
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import './styles/ProfilePage.css';
 
 const ProfilePage = () => {
