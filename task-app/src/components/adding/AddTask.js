@@ -1,9 +1,10 @@
-// TaskComponent.js
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../firebase/AuthContext';
 import { addTaskToDB } from '../firebase/firebase-config';
 import VoiceRecognition from '../voiceUtils/VoiceRecognitionTask';
 import { processTranscript } from '../voiceUtils/SpeechProcessing';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase/firebase-config'; // Make sure this path matches your file structure
 import './styles/AddComponent.css';
 
 const TaskComponent = ({ onTaskAdded }) => {
@@ -11,8 +12,30 @@ const TaskComponent = ({ onTaskAdded }) => {
   const [itemName, setItemName] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
-  const [selectedTag, setSelectedTag] = useState('home');
+  const [tags, setTags] = useState([]); // State to store user's tags
+  const [selectedTag, setSelectedTag] = useState(''); // State to store the currently selected tag
   const [isListening, setIsListening] = useState(false);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      if (currentUser) {
+        const tagsDocRef = doc(db, 'users', currentUser.uid, 'tags', 'taskTags');
+        try {
+          const docSnap = await getDoc(tagsDocRef);
+          if (docSnap.exists() && docSnap.data().tags) {
+            setTags(docSnap.data().tags);
+            setSelectedTag(docSnap.data().tags[0]); // Default to the first tag if available
+          } else {
+            setTags([]);
+          }
+        } catch (error) {
+          console.error("Error fetching tags:", error);
+        }
+      }
+    };
+
+    fetchTags();
+  }, [currentUser]);
 
   const onTranscriptReceived = (transcript) => {
     const processed = processTranscript(transcript);
@@ -74,10 +97,20 @@ const TaskComponent = ({ onTaskAdded }) => {
           />
         </div>
         <div className="form-group">
-          <select className="form-control" value={selectedTag} onChange={(e) => setSelectedTag(e.target.value)}>
-            <option value="home">Home</option>
-            <option value="work">Work</option>
-            <option value="personal">Personal</option>
+          <select
+            className="form-control"
+            value={selectedTag}
+            onChange={(e) => setSelectedTag(e.target.value)}
+          >
+            {tags.length > 0 ? (
+              tags.map((tag, index) => (
+                <option key={index} value={tag}>
+                  {tag}
+                </option>
+              ))
+            ) : (
+              <option value="">No tags available</option>
+            )}
           </select>
         </div>
         <div className="form-group">

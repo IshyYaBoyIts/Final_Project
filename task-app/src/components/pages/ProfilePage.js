@@ -1,71 +1,74 @@
 import React, { useEffect, useState } from 'react';
-import { signInWithGoogle, auth, db } from '../components/firebase/firebase-config';
-import ThemeSelector from '../components/theme/ThemeSelector';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { signInWithGoogle, auth, db } from '../firebase/firebase-config';
+import ThemeSelector from '../theme/ThemeSelector';
+import { doc, getDoc, setDoc, updateDoc, writeBatch, arrayUnion } from 'firebase/firestore'; // Import arrayUnion here
 import './styles/ProfilePage.css';
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [selectedTheme, setSelectedTheme] = useState('default');
+  const [tags, setTags] = useState([]);
+  const [newTag, setNewTag] = useState('');
 
   useEffect(() => {
-    // This effect runs once on component mount and whenever the user's authentication state changes.
     const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
         const userDocRef = doc(db, 'users', firebaseUser.uid);
+
         try {
           const docSnap = await getDoc(userDocRef);
           if (docSnap.exists()) {
-            // Directly update the theme only if it exists to avoid flickering
             setSelectedTheme(docSnap.data().theme);
-          } else {
-            // Handle the case where the document does not exist.
-            // Consider setting a default theme or creating the document as needed.
           }
         } catch (error) {
           console.error("Error accessing user document:", error);
         }
+
+        const tagsDocRef = doc(db, 'users', firebaseUser.uid, 'tags', 'taskTags');
+        try {
+          const tagsDocSnap = await getDoc(tagsDocRef);
+          if (tagsDocSnap.exists()) {
+            setTags(tagsDocSnap.data().tags || []);
+          }
+        } catch (error) {
+          console.error("Error fetching tags:", error);
+        }
       } else {
-        // Handle user not signed in or authentication state reset
-        setSelectedTheme('default'); // Reset to default theme if user is not signed in
+        setSelectedTheme('default');
+        setTags([]);
       }
     });
-  
-    return () => unsubscribe(); // Cleanup subscription on component unmount
-  }, [auth]); // Depend on auth object to re-run if auth state changes
-  
+
+    return () => unsubscribe();
+  }, [auth]);
 
   const updateTheme = async (newTheme) => {
-    if (user && selectedTheme !== newTheme) { // Check if the theme has actually changed
+    if (user && selectedTheme !== newTheme) {
       const userDocRef = doc(db, 'users', user.uid);
+
       try {
-        const docSnap = await getDoc(userDocRef);
-  
-        if (!docSnap.exists()) {
-          // Document does not exist, so create it with the selected theme
-          await setDoc(userDocRef, {
-            displayName: user.displayName,
-            email: user.email,
-            theme: newTheme,
-          });
-          console.log('Document created with selected theme');
-        } else if (docSnap.data().theme !== newTheme) {
-          // Document exists and the theme is different, update the theme
-          await updateDoc(userDocRef, { theme: newTheme });
-          console.log('Document updated with new theme');
-        } else {
-          // If the theme in Firestore is the same as the new theme, no need to update
-          console.log('Theme is the same, no update required');
-        }
-        setSelectedTheme(newTheme); // Update local state to reflect the change
+        await updateDoc(userDocRef, { theme: newTheme });
+        setSelectedTheme(newTheme);
       } catch (error) {
-        console.error("Error creating/updating user document:", error);
+        console.error("Error updating theme:", error);
       }
     }
   };
-  
-  
+
+  const addTag = async () => {
+    if (newTag.trim() !== '' && user) {
+      const tagsDocRef = doc(db, 'users', user.uid, 'tags', 'taskTags');
+      try {
+        await updateDoc(tagsDocRef, { tags: arrayUnion(newTag.trim()) });
+        setTags((prevTags) => [...prevTags, newTag.trim()]);
+        setNewTag('');
+      } catch (error) {
+        console.error("Error adding new tag:", error);
+      }
+    }
+  };
+
   return (
     <div className="profile-page">
       {user ? (
@@ -76,6 +79,16 @@ const ProfilePage = () => {
           </div>
           <div className="profile-item">
             <p>Email: {user.email}</p>
+          </div>
+          <div className="profile-item">
+            <h3>Your Tags</h3>
+            <select>
+              {tags.map((tag, index) => (
+                <option key={index} value={tag}>{tag}</option>
+              ))}
+            </select>
+            <input type="text" value={newTag} onChange={(e) => setNewTag(e.target.value)} placeholder="Add new tag" />
+            <button onClick={addTag}>Add Tag</button>
           </div>
         </div>
       ) : (

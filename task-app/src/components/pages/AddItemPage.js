@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import TaskComponent from '../components/adding/AddTask.js';
-import RoutineComponent from '../components/adding/AddRoutine.js';
+import TaskComponent from '../adding/AddTask.js';
+import RoutineComponent from '../adding/AddRoutine.js';
 import './styles/AddItemPage.css';
 
 const AddItemPage = () => {
