@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { signInWithGoogle, auth, db } from '../firebase/firebase-config';
 import ThemeSelector from '../theme/ThemeSelector';
-import { doc, getDoc, setDoc, updateDoc, writeBatch, arrayUnion } from 'firebase/firestore'; // Import arrayUnion here
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore'; 
 import './styles/ProfilePage.css';
 
 const ProfilePage = () => {
@@ -60,9 +60,18 @@ const ProfilePage = () => {
     if (newTag.trim() !== '' && user) {
       const tagsDocRef = doc(db, 'users', user.uid, 'tags', 'taskTags');
       try {
-        await updateDoc(tagsDocRef, { tags: arrayUnion(newTag.trim()) });
-        setTags((prevTags) => [...prevTags, newTag.trim()]);
-        setNewTag('');
+        // Check if the document exists
+        const docSnap = await getDoc(tagsDocRef);
+        if (!docSnap.exists()) {
+          // If the document does not exist, create it with the new tag
+          await setDoc(tagsDocRef, { tags: [newTag.trim()] });
+        } else {
+          // If the document exists, use arrayUnion to add the new tag
+          await updateDoc(tagsDocRef, { tags: arrayUnion(newTag.trim()) });
+        }
+        // Update local state
+        setTags(prevTags => [...prevTags, newTag.trim()]);
+        setNewTag(''); // Clear the input field
       } catch (error) {
         console.error("Error adding new tag:", error);
       }
