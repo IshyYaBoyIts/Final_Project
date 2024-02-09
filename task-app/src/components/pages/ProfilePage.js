@@ -1,110 +1,78 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { signInWithGoogle, auth, db } from '../firebase/firebase-config';
+import { AuthContext } from '../firebase/AuthContext';
 import ThemeSelector from '../theme/ThemeSelector';
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore'; 
 import './styles/ProfilePage.css';
 
 const ProfilePage = () => {
-  const [user, setUser] = useState(null);
-  const [selectedTheme, setSelectedTheme] = useState('default');
-  const [tags, setTags] = useState([]);
-  const [newTag, setNewTag] = useState('');
+    const { currentUser, theme, setTheme } = useContext(AuthContext); 
+    const [tags, setTags] = useState([]);
+    const [newTag, setNewTag] = useState('');
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
-      setUser(firebaseUser);
-      if (firebaseUser) {
-        const userDocRef = doc(db, 'users', firebaseUser.uid);
+    useEffect(() => {
+        // This useEffect is for fetching tags specifically, theme is managed globally
+        const fetchTags = async () => {
+            if (currentUser) {
+                const tagsDocRef = doc(db, 'users', currentUser.uid, 'tags', 'taskTags');
+                try {
+                    const docSnap = await getDoc(tagsDocRef);
+                    if (docSnap.exists()) {
+                        setTags(docSnap.data().tags || []);
+                    } else {
+                        // Handle the case where the document does not exist (e.g., no tags yet)
+                    }
+                } catch (error) {
+                    console.error("Error fetching tags:", error);
+                }
+            }
+        };
 
-        try {
-          const docSnap = await getDoc(userDocRef);
-          if (docSnap.exists()) {
-            setSelectedTheme(docSnap.data().theme);
-          }
-        } catch (error) {
-          console.error("Error accessing user document:", error);
+        fetchTags();
+    }, [currentUser]);
+
+    const addTag = async () => {
+        if (newTag.trim() !== '' && currentUser) {
+            const tagsDocRef = doc(db, 'users', currentUser.uid, 'tags', 'taskTags');
+            try {
+                await updateDoc(tagsDocRef, {
+                    tags: arrayUnion(newTag.trim())
+                });
+                setTags(prevTags => [...prevTags, newTag.trim()]);
+                setNewTag('');
+            } catch (error) {
+                console.error("Error adding new tag:", error);
+            }
         }
+    };
 
-        const tagsDocRef = doc(db, 'users', firebaseUser.uid, 'tags', 'taskTags');
-        try {
-          const tagsDocSnap = await getDoc(tagsDocRef);
-          if (tagsDocSnap.exists()) {
-            setTags(tagsDocSnap.data().tags || []);
-          }
-        } catch (error) {
-          console.error("Error fetching tags:", error);
-        }
-      } else {
-        setSelectedTheme('default');
-        setTags([]);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [auth]);
-
-  const updateTheme = async (newTheme) => {
-    if (user && selectedTheme !== newTheme) {
-      const userDocRef = doc(db, 'users', user.uid);
-
-      try {
-        await updateDoc(userDocRef, { theme: newTheme });
-        setSelectedTheme(newTheme);
-      } catch (error) {
-        console.error("Error updating theme:", error);
-      }
-    }
-  };
-
-  const addTag = async () => {
-    if (newTag.trim() !== '' && user) {
-      const tagsDocRef = doc(db, 'users', user.uid, 'tags', 'taskTags');
-      try {
-        // Check if the document exists
-        const docSnap = await getDoc(tagsDocRef);
-        if (!docSnap.exists()) {
-          // If the document does not exist, create it with the new tag
-          await setDoc(tagsDocRef, { tags: [newTag.trim()] });
-        } else {
-          // If the document exists, use arrayUnion to add the new tag
-          await updateDoc(tagsDocRef, { tags: arrayUnion(newTag.trim()) });
-        }
-        // Update local state
-        setTags(prevTags => [...prevTags, newTag.trim()]);
-        setNewTag(''); // Clear the input field
-      } catch (error) {
-        console.error("Error adding new tag:", error);
-      }
-    }
-  };
-
-  return (
-    <div className="profile-page">
-      {user ? (
-        <div className="profile-container">
-          <ThemeSelector user={user} onThemeChange={updateTheme} selectedTheme={selectedTheme} />
-          <div className="profile-item">
-            <h2>Welcome, {user.displayName}</h2>
-          </div>
-          <div className="profile-item">
-            <p>Email: {user.email}</p>
-          </div>
-          <div className="profile-item">
-            <h3>Your Tags</h3>
-            <select>
-              {tags.map((tag, index) => (
-                <option key={index} value={tag}>{tag}</option>
-              ))}
-            </select>
-            <input type="text" value={newTag} onChange={(e) => setNewTag(e.target.value)} placeholder="Add new tag" />
-            <button onClick={addTag}>Add Tag</button>
-          </div>
+    return (
+        <div className="profile-page">
+            {currentUser ? (
+                <div className="profile-container">
+                    <ThemeSelector onThemeChange={setTheme} selectedTheme={theme} />
+                    <div className="profile-item">
+                        <h2>Welcome, {currentUser.displayName}</h2>
+                    </div>
+                    <div className="profile-item">
+                        <p>Email: {currentUser.email}</p>
+                    </div>
+                    <div className="profile-item">
+                        <h3>Your Tags</h3>
+                        <select>
+                            {tags.map((tag, index) => (
+                                <option key={index} value={tag}>{tag}</option>
+                            ))}
+                        </select>
+                        <input type="text" value={newTag} onChange={(e) => setNewTag(e.target.value)} placeholder="Add new tag" />
+                        <button onClick={addTag}>Add Tag</button>
+                    </div>
+                </div>
+            ) : (
+                <button onClick={signInWithGoogle}>Sign in with Google</button>
+            )}
         </div>
-      ) : (
-        <button onClick={signInWithGoogle}>Sign in with Google</button>
-      )}
-    </div>
-  );
+    );
 };
 
 export default ProfilePage;
