@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, query, where, getDocs, doc, updateDoc } from 'firebase/firestore'; // Added doc and updateDoc
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-
 
 // Firebase configuration
 const firebaseConfig = {
@@ -28,17 +27,18 @@ export const logout = () => {
 export const addTaskToDB = async (userId, newTask) => {
   try {
     const taskWithCompletion = { ...newTask, isComplete: false }; // Add isComplete flag
-    const docRef = await addDoc(collection(db, "tasks"), taskWithCompletion);
-    console.log("Task added with ID:", docRef.id); // Log the document ID of the added task
+    // Assuming tasks are under a 'users' collection, then a subcollection 'tasks' for each user
+    const docRef = await addDoc(collection(db, `users/${userId}/tasks`), taskWithCompletion);
+    console.log("Task added with ID:", docRef.id);
   } catch (error) {
     console.error("Error adding task:", error);
-    alert("Failed to add task. Please try again.");
   }
 };
 
-export const addRoutineToDB = async (newRoutine) => {
+export const addRoutineToDB = async (userId, newRoutine) => {
   try {
-    const docRef = await addDoc(collection(db, "routines"), newRoutine);
+    // Assuming routines are under a 'users' collection, then a subcollection 'routines' for each user
+    const docRef = await addDoc(collection(db, `users/${userId}/routines`), newRoutine);
     console.log("Routine added with ID:", docRef.id);
   } catch (error) {
     console.error("Error adding routine:", error);
@@ -46,15 +46,22 @@ export const addRoutineToDB = async (newRoutine) => {
 };
 
 export const getTasksFromDB = async (userId) => {
-  const q = query(collection(db, "tasks"), where("userId", "==", userId));
+  const q = query(collection(db, `users/${userId}/tasks`));
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
 export const getRoutinesFromDB = async (userId) => {
-  const q = query(collection(db, "routines"), where("userId", "==", userId));
+  const q = query(collection(db, `users/${userId}/routines`));
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+};
+
+export const updateTaskStatusInDB = async (userId, taskId, isComplete) => {
+  const taskDocRef = doc(db, `users/${userId}/tasks`, taskId);
+  await updateDoc(taskDocRef, {
+    isComplete: isComplete
+  });
 };
 
 // Export Firebase instances

@@ -16,12 +16,14 @@
 }
 
 .list-item {
-  background-color: var(--tertiary-color); /* Tertiary color as background */
+  position: relative; /* Position relative for absolute child elements */
   display: flex;
-  justify-content: center; /* Centering the inner content */
+  justify-content: space-between; /* Space out the content and button */
   align-items: center;
-  width: 100%; /* Full width of the item */
-  margin: 10px 0; /* Space between items */
+  width: 95%;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px; /* Rounded corners */
 }
 
 .list-item-inner {
@@ -55,23 +57,41 @@
   margin-bottom: 2px; /* Space between details */
 }
 
-/* Specific styles for status indicator */
-.status-indicator {
-  height: 15px;
-  width: 15px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-left: 10px;
+.mark-complete-button {
+  cursor: pointer;
+  padding: 10px 20px; /* Larger click area */
+  border-radius: 20px; /* Rounded corners */
+  border: none; /* No border */
+  background-color: #4CAF50; /* Green background for 'complete' action */
+  color: white; /* White text color */
+  position: absolute; /* Absolute position relative to its parent */
+  right: 10px; /* Positioned to the right */
+  top: 50%; /* Positioned halfway down the parent */
+  transform: translateY(-50%); /* Offset the button by half its height to center */
+  transition: background-color 0.3s; /* Transition for hover effect */
 }
 
-.status-indicator.green {
-  background-color: #5dfdcb; /* Primary color for completed tasks */
+/* Button initially appears as light red */
+.mark-complete-button.incomplete {
+  background-color: #ffcccb; /* Light red background for 'incomplete' action */
 }
 
-.status-indicator.orange {
-  background-color: #ffb347; /* Orange color for pending tasks */
+/* Button turns green when the task is marked as complete */
+.mark-complete-button.complete {
+  background-color: #4CAF50; /* Green background for 'complete' action */
 }
 
-.status-indicator.red {
-  background-color: #ff6961; /* Red color for overdue tasks */
+/* Hover effect for the incomplete button */
+.mark-complete-button.incomplete:hover {
+  background-color: #ff7f7f; /* Slightly darker red on hover */
+}
+
+/* Hover effect for the complete button */
+.mark-complete-button.complete:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
+}
+
+/* Amber hover effect */
+.mark-complete-button:hover {
+  box-shadow: 0 0 10px #ffc107; /* Amber glow */
 }

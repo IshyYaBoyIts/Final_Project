@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { AuthContext } from '../firebase/AuthContext';
-import { addTaskToDB } from '../firebase/firebase-config';
-import VoiceRecognition from '../voiceUtils/VoiceRecognitionTask';
-import { processTranscript } from '../voiceUtils/SpeechProcessing';
+import { AuthContext } from '../../firebase/AuthContext';
+import { addTaskToDB } from '../../firebase/firebase-config';
+import VoiceRecognition from '../../voiceUtils/VoiceRecognitionTask';
+import { processTranscript } from '../../voiceUtils/SpeechProcessing';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebase-config'; // Make sure this path matches your file structure
+import { db } from '../../firebase/firebase-config'; 
 import './styles/AddComponent.css';
 
 const TaskComponent = ({ onTaskAdded }) => {
