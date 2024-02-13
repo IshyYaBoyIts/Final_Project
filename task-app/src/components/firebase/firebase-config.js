@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, query, where, getDocs, doc, updateDoc } from 'firebase/firestore'; // Added doc and updateDoc
+import { getFirestore, doc, updateDoc, addDoc, collection, query, getDocs, deleteField } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
 // Firebase configuration
@@ -26,8 +26,7 @@ export const logout = () => {
 
 export const addTaskToDB = async (userId, newTask) => {
   try {
-    const taskWithCompletion = { ...newTask, isComplete: false }; // Add isComplete flag
-    // Assuming tasks are under a 'users' collection, then a subcollection 'tasks' for each user
+    const taskWithCompletion = { ...newTask, isComplete: false };
     const docRef = await addDoc(collection(db, `users/${userId}/tasks`), taskWithCompletion);
     console.log("Task added with ID:", docRef.id);
   } catch (error) {
@@ -37,7 +36,6 @@ export const addTaskToDB = async (userId, newTask) => {
 
 export const addRoutineToDB = async (userId, newRoutine) => {
   try {
-    // Assuming routines are under a 'users' collection, then a subcollection 'routines' for each user
     const docRef = await addDoc(collection(db, `users/${userId}/routines`), newRoutine);
     console.log("Routine added with ID:", docRef.id);
   } catch (error) {
@@ -59,10 +57,24 @@ export const getRoutinesFromDB = async (userId) => {
 
 export const updateTaskStatusInDB = async (userId, taskId, isComplete) => {
   const taskDocRef = doc(db, `users/${userId}/tasks`, taskId);
-  await updateDoc(taskDocRef, {
-    isComplete: isComplete
+  await updateDoc(taskDocRef, { isComplete });
+};
+
+export const markRoutineCompleteInDB = async (userId, routineId) => {
+  const routineRef = doc(getFirestore(), `users/${userId}/routines`, routineId);
+  const now = new Date();
+  await updateDoc(routineRef, {
+    lastCompleted: now,
+    previousCompletion: deleteField(),
   });
 };
 
-// Export Firebase instances
+export const markRoutineIncompleteInDB = async (userId, routineId, previousCompletionDate) => {
+  const routineRef = doc(getFirestore(), `users/${userId}/routines`, routineId);
+  const updateData = previousCompletionDate ? { lastCompleted: previousCompletionDate } : { lastCompleted: deleteField() };
+  await updateDoc(routineRef, updateData);
+};
+
+
+
 export { db, auth, googleAuthProvider };
