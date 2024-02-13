@@ -1,14 +1,14 @@
 // ThemeSelector.js
 import React, { useContext } from 'react';
-import { AuthContext } from '../firebase/AuthContext'; // Adjust the import path as necessary
+import { AuthContext } from '../firebase/AuthContext';
 import ThemeCard from './ThemeCard';
-import { themes } from './Themes'; // Ensure this is the correct path to your themes
+import { themes } from './Themes'; 
 
 const ThemeSelector = () => {
   const { theme: selectedTheme, updateTheme } = useContext(AuthContext);
 
   const handleThemeChange = (themeValue) => {
-    console.log(`Changing theme to: ${themeValue}`); // Add this log
+    console.log(`Changing theme to: ${themeValue}`);
     if (themeValue) {
       updateTheme(themeValue);
     } else {

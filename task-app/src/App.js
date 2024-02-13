@@ -10,6 +10,7 @@ import AddItemPage from './components/pages/AddItemPage';
 import Tabs from './components/navigation/Tabs';
 import ProfilePage from './components/pages/ProfilePage';
 import './App.css';
+import ThemedAppWrapper from './components/theme/ThemedAppWrapper';
 
 const App = () => {
   const [currentView, setCurrentView] = useState('tasks');
@@ -19,18 +20,20 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <Header />
-        <NavBar />
-        <Routes>
-          <Route path="/" element={
-            <>
-              <Tabs currentView={currentView} onChangeView={setCurrentView} />
-              {currentView === 'tasks' ? <TaskList tasks={tasks} /> : <RoutineList routines={routines} />}
-            </>
-          } />
-          <Route path="/add-item" element={<AddItemPage setTasks={setTasks} setRoutines={setRoutines} />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Routes>
+      <ThemedAppWrapper>
+          <Header />
+          <NavBar />
+          <Routes>
+            <Route path="/" element={
+              <>
+                <Tabs currentView={currentView} onChangeView={setCurrentView} />
+                {currentView === 'tasks' ? <TaskList tasks={tasks} /> : <RoutineList routines={routines} />}
+              </>
+            } />
+            <Route path="/add-item" element={<AddItemPage setTasks={setTasks} setRoutines={setRoutines} />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Routes>
+        </ThemedAppWrapper>
       </Router>
     </AuthProvider>
   );
