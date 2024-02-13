@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { signInWithGoogle, auth, db } from '../firebase/firebase-config';
 import ThemeSelector from '../theme/ThemeSelector';
+import { themes } from '../theme/Themes';
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore'; 
 import './styles/ProfilePage.css';
 
