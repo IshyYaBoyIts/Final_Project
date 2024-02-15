@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, updateDoc, addDoc, collection, query, getDocs, deleteField } from 'firebase/firestore';
+import { getFirestore, doc, updateDoc, addDoc, collection, query, getDocs } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
 // Firebase configuration
@@ -24,6 +24,8 @@ export const logout = () => {
   return signOut(auth);
 };
 
+// TASK DB FUNCTIONS
+
 export const addTaskToDB = async (userId, newTask) => {
   try {
     const taskWithCompletion = { ...newTask, isComplete: false };
@@ -34,23 +36,8 @@ export const addTaskToDB = async (userId, newTask) => {
   }
 };
 
-export const addRoutineToDB = async (userId, newRoutine) => {
-  try {
-    const docRef = await addDoc(collection(db, `users/${userId}/routines`), newRoutine);
-    console.log("Routine added with ID:", docRef.id);
-  } catch (error) {
-    console.error("Error adding routine:", error);
-  }
-};
-
 export const getTasksFromDB = async (userId) => {
   const q = query(collection(db, `users/${userId}/tasks`));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-};
-
-export const getRoutinesFromDB = async (userId) => {
-  const q = query(collection(db, `users/${userId}/routines`));
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
@@ -60,21 +47,44 @@ export const updateTaskStatusInDB = async (userId, taskId, isComplete) => {
   await updateDoc(taskDocRef, { isComplete });
 };
 
-export const markRoutineCompleteInDB = async (userId, routineId) => {
-  const routineRef = doc(getFirestore(), `users/${userId}/routines`, routineId);
-  const now = new Date();
-  await updateDoc(routineRef, {
-    lastCompleted: now,
-    previousCompletion: deleteField(),
-  });
+// ROUTINE DB FUNCITONS
+
+export const addRoutineToDB = async (userId, newRoutine) => {
+  const createdAt = new Date(); 
+  const checkboxCount = getCheckboxCount(newRoutine); // Function to calculate checkbox count based on routine
+  const checkboxes = new Array(checkboxCount).fill("unchecked"); 
+
+  const validatedRoutine = {
+    ...newRoutine,
+    createdAt: createdAt.toISOString(), 
+    checkboxStates: checkboxes, 
+  };
+
+  try {
+    const docRef = await addDoc(collection(db, `users/${userId}/routines`), validatedRoutine);
+    console.log("Routine added with ID:", docRef.id);
+  } catch (error) {
+    console.error("Error adding routine:", error);
+    throw new Error("Failed to add the routine to the database.");
+  }
 };
 
-export const markRoutineIncompleteInDB = async (userId, routineId, previousCompletionDate) => {
-  const routineRef = doc(getFirestore(), `users/${userId}/routines`, routineId);
-  const updateData = previousCompletionDate ? { lastCompleted: previousCompletionDate } : { lastCompleted: deleteField() };
-  await updateDoc(routineRef, updateData);
+
+export const getRoutinesFromDB = async (userId) => {
+  const q = query(collection(db, `users/${userId}/routines`));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
+export const updateRoutineCheckboxStates = async (userId, routineId, checkboxIndex, isChecked) => {
+  const routineRef = doc(db, `users/${userId}/routines`, routineId);
+  const docSnap = await getDoc(routineRef);
+  if (docSnap.exists()) {
+    const routine = docSnap.data();
+    routine.checkboxStates[checkboxIndex] = isChecked ? "checked" : "unchecked"; 
+    await updateDoc(routineRef, { checkboxStates: routine.checkboxStates });
+  }
+};
 
 
 export { db, auth, googleAuthProvider };

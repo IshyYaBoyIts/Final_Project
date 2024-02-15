@@ -17,13 +17,14 @@ const RoutineComponent = ({ onRoutineAdded }) => {
       return;
     }
 
+    // Validate and format the newRoutine object before sending it to Firestore
     const newRoutine = {
-      name: itemName,
-      description: description,
-      frequencyNumber: frequencyNumber,
+      name: itemName.trim(), // Trim whitespace
+      description: description.trim(), // Trim whitespace
+      frequencyNumber: parseInt(frequencyNumber, 10), // Ensure it's an integer
       frequencyPeriod: frequencyPeriod,
-      lastCompleted: null, // Ensure routines start as incomplete
-      previousCompletion: null, // Initialize with no previous completion
+      completionsToday: 0, // Initialize completionsToday
+      routineStart: new Date().toISOString(), // ISO string for the start of the current period
     };
 
     try {
