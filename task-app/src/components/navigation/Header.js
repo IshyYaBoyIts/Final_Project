@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { auth, logout } from './firebase-config'; // Adjust the path as needed
+import { auth, logout } from '../firebase/firebase-config'; // Adjust the path as needed
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import './styles/Header.css';
@@ -35,7 +35,7 @@ function Header() {
           <FontAwesomeIcon icon={faChevronLeft} />
         </button>
       )}
-      <h1>Task-App</h1>
+      <h1>Happy Habits</h1>
       {location.pathname === '/profile' && user && (
         <button onClick={handleLogout} className="logout-button">
           <FontAwesomeIcon icon={faRightFromBracket} />

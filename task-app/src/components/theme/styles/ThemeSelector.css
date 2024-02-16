@@ -1,0 +1,42 @@
+/* ThemeCard.css */
+.theme-cards-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Space between cards */
+  }
+  
+  .theme-card {
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    width: 100px; /* Adjust the width as needed */
+    height: 150px; /* Adjust the height as needed */
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .theme-card-preview {
+    flex-grow: 1;
+    border-radius: 4px 4px 0 0;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+  }
+  
+  .theme-card-color {
+    height: 80%;
+    width: 100%;
+  }
+  
+  .theme-card-name {
+    text-align: center;
+    padding: 5px;
+    background-color: #f0f0f0; /* Adjust color as needed */
+  }
+  
+  .theme-card-selected {
+    border-color: #000; /* Change as needed to indicate selection */
+  }
+  

@@ -1,0 +1,142 @@
+.empty-list {
+  border: 2px dashed #ccc; /* Dashed border for the empty box */
+  border-radius: 8px; /* Curved corners */
+  text-align: center;
+  padding: 20px;
+  margin: 20px;
+  color: #999;
+}
+
+.task-list, .routine-list {
+  background-color: var(--tertiary-color); /* Tertiary color as background */
+  width: 95%; /* Fill 9% of its container's width */
+  margin: 10px auto; /* Center the list */
+  padding: 10px 0; /* Padding top and bottom */
+  border-radius: 8px; /* Curved corners for the list */
+}
+
+.list-item {
+  position: relative; /* Position relative for absolute child elements */
+  display: flex;
+  justify-content: space-between; /* Space out the content and button */
+  align-items: center;
+  width: 95%;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 8px; /* Rounded corners */
+}
+
+.list-item-inner {
+  display: flex;
+  justify-content: space-between; /* Space out the content and status indicator */
+  align-items: center;
+  width: 100%; /* Full width of the item */
+}
+
+.item-content {
+  width: 80%; /* Width of the content area */
+  margin: auto; /* Center the content */
+  padding-bottom: 10px; /* Padding at the bottom of each item */
+  border-bottom: 5px solid #e0e0e0; /* Solid color for the separator line */
+}
+
+.item-detail {
+  display: flex;
+  flex-direction: column;
+  width: 80%; /* Width of the details area */
+}
+
+.item-name {
+  font-weight: bold;
+  margin-bottom: 4px; /* Space below the name */
+}
+
+.item-category, .item-due-date, .item-frequency, item-description {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 2px; /* Space between details */
+}
+
+.mark-complete-button {
+  cursor: pointer;
+  padding: 10px 20px; /* Larger click area */
+  border-radius: 20px; /* Rounded corners */
+  border: none; /* No border */
+  background-color: #4CAF50; /* Green background for 'complete' action */
+  color: white; /* White text color */
+  position: absolute; /* Absolute position relative to its parent */
+  right: 10px; /* Positioned to the right */
+  top: 50%; /* Positioned halfway down the parent */
+  transform: translateY(-50%); /* Offset the button by half its height to center */
+  transition: background-color 0.3s; /* Transition for hover effect */
+}
+
+/* Task button */
+/* Button initially appears as light red */
+.mark-complete-button.incomplete {
+  background-color: #ffcccb; /* Light red background for 'incomplete' action */
+}
+
+/* Button turns green when the task is marked as complete */
+.mark-complete-button.complete {
+  background-color: #4CAF50; /* Green background for 'complete' action */
+}
+
+/* Hover effect for the incomplete button */
+.mark-complete-button.incomplete:hover {
+  background-color: #ff7f7f; /* Slightly darker red on hover */
+}
+
+/* Hover effect for the complete button */
+.mark-complete-button.complete:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
+}
+
+/* Amber hover effect */
+.mark-complete-button:hover {
+  box-shadow: 0 0 10px #ffc107; /* Amber glow */
+}
+
+/* Routine checkboxes container */
+.checkboxes-container {
+  display: inline-flex; /* Align checkboxes in a row and allow the container to grow with content */
+  gap: 4px; /* Space between checkboxes */
+  background-color: #ff6978; /* Pink background */
+  padding: 4px; /* Padding around checkboxes */
+  border-radius: 4px; /* Rounded corners for the container */
+  margin: 0 auto; /* Center container if needed */
+}
+
+/* Individual checkbox styling */
+.routine-checkbox {
+  cursor: pointer;
+  appearance: none; /* Remove default styling */
+  width: 20px; /* Checkbox size */
+  height: 20px;
+  margin: 0; /* Remove any default margin */
+  border: 2px solid #fff; /* White border for unchecked state */
+  border-radius: 4px; /* Rounded corners for checkbox */
+  background-color: transparent; /* Transparent background for unchecked state */
+  position: relative; /* Positioning context for pseudo-elements */
+}
+
+/* Checked state styling */
+.routine-checkbox:checked {
+  background-color: #4CAF50; /* Green background for checked state */
+  border-color: #fff; /* Green border to match the background */
+}
+
+.routine-checkbox:checked::before {
+  content: ''; /* Required for pseudo-elements */
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  background-color: #4CAF50; /* Green background for the checkmark area */
+  border-radius: 2px; /* Slightly rounded corners for the inner element */
+}
+
+.routine-checkbox:hover {
+  background-color:#4CAF50; /* Amber glow */
+}
