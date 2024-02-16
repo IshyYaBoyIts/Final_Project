@@ -35,7 +35,7 @@ function Header() {
           <FontAwesomeIcon icon={faChevronLeft} />
         </button>
       )}
-      <h1>Happy Habbits</h1>
+      <h1>Happy Habits</h1>
       {location.pathname === '/profile' && user && (
         <button onClick={handleLogout} className="logout-button">
           <FontAwesomeIcon icon={faRightFromBracket} />
