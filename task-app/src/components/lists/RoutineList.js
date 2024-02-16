@@ -8,6 +8,7 @@ function RoutineList() {
   const [routines, setRoutines] = useState([]);
 
   // This will hold the checked state for each checkbox of every routine
+  // eslint-disable-next-line
   const [checkboxStates, setCheckboxStates] = useState({});
 
   const fetchRoutines = useCallback(async () => {
