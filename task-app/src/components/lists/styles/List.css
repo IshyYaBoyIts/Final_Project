@@ -97,21 +97,46 @@
   box-shadow: 0 0 10px #ffc107; /* Amber glow */
 }
 
-/* Routine button */
-.complete-routine-btn {
-  background-color: #4CAF50; /* Green */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 14px;
-  margin-top: 10px;
+/* Routine checkboxes container */
+.checkboxes-container {
+  display: inline-flex; /* Align checkboxes in a row and allow the container to grow with content */
+  gap: 4px; /* Space between checkboxes */
+  background-color: #ff6978; /* Pink background */
+  padding: 4px; /* Padding around checkboxes */
+  border-radius: 4px; /* Rounded corners for the container */
+  margin: 0 auto; /* Center container if needed */
 }
 
-.complete-routine-btn:hover {
-  background-color: #45a049;
+/* Individual checkbox styling */
+.routine-checkbox {
+  cursor: pointer;
+  appearance: none; /* Remove default styling */
+  width: 20px; /* Checkbox size */
+  height: 20px;
+  margin: 0; /* Remove any default margin */
+  border: 2px solid #fff; /* White border for unchecked state */
+  border-radius: 4px; /* Rounded corners for checkbox */
+  background-color: transparent; /* Transparent background for unchecked state */
+  position: relative; /* Positioning context for pseudo-elements */
 }
-.complete-routine-btn.mark-incomplete {
-  background-color: #f44336; /* Example color for "incomplete" action */
+
+/* Checked state styling */
+.routine-checkbox:checked {
+  background-color: #4CAF50; /* Green background for checked state */
+  border-color: #fff; /* Green border to match the background */
+}
+
+.routine-checkbox:checked::before {
+  content: ''; /* Required for pseudo-elements */
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  background-color: #4CAF50; /* Green background for the checkmark area */
+  border-radius: 2px; /* Slightly rounded corners for the inner element */
+}
+
+.routine-checkbox:hover {
+  background-color:#4CAF50; /* Amber glow */
 }

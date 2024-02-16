@@ -15,7 +15,7 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const googleAuthProvider = new GoogleAuthProvider();
 
-// Functions
+// LOGIN FUNCTIONS
 export const signInWithGoogle = () => {
   return signInWithPopup(auth, googleAuthProvider);
 };
@@ -49,19 +49,41 @@ export const updateTaskStatusInDB = async (userId, taskId, isComplete) => {
 
 // ROUTINE DB FUNCITONS
 
-export const addRoutineToDB = async (userId, newRoutine) => {
-  const createdAt = new Date(); 
-  const checkboxCount = getCheckboxCount(newRoutine); // Function to calculate checkbox count based on routine
-  const checkboxes = new Array(checkboxCount).fill("unchecked"); 
+export const getCheckboxCount = (routine) => {
+  switch (routine.frequencyPeriod) {
+    case 'hour':
+      // Assuming frequencyNumber is how many times per hour, to show checkboxes for each occurrence in a day
+      return 24 * routine.frequencyNumber;
+    case 'day':
+      // Show a checkbox for each occurrence in a day
+      return routine.frequencyNumber;
+    case 'week':
+      // For weekly routines, a single checkbox is needed
+      return 1;
+    case 'month':
+      // For monthly routines, a single checkbox is needed
+      return 1;
+    case 'year':
+      // For yearly routines, a single checkbox is needed
+      return 1;
+    default:
+      console.warn(`Unknown frequency period: ${routine.frequencyPeriod}`);
+      return 0;
+  }
+};
 
-  const validatedRoutine = {
+export const addRoutineToDB = async (userId, newRoutine) => {
+  const checkboxCount = getCheckboxCount(newRoutine); 
+  const initialCheckboxStates = Array(checkboxCount).fill("unchecked");
+
+  const routineToAdd = {
     ...newRoutine,
-    createdAt: createdAt.toISOString(), 
-    checkboxStates: checkboxes, 
+    checkboxStates: initialCheckboxStates,
+    createdAt: new Date().toISOString()
   };
 
   try {
-    const docRef = await addDoc(collection(db, `users/${userId}/routines`), validatedRoutine);
+    const docRef = await addDoc(collection(db, `users/${userId}/routines`), routineToAdd);
     console.log("Routine added with ID:", docRef.id);
   } catch (error) {
     console.error("Error adding routine:", error);
@@ -76,14 +98,9 @@ export const getRoutinesFromDB = async (userId) => {
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-export const updateRoutineCheckboxStates = async (userId, routineId, checkboxIndex, isChecked) => {
+export const updateRoutineCheckboxStates = async (userId, routineId, checkboxStates) => {
   const routineRef = doc(db, `users/${userId}/routines`, routineId);
-  const docSnap = await getDoc(routineRef);
-  if (docSnap.exists()) {
-    const routine = docSnap.data();
-    routine.checkboxStates[checkboxIndex] = isChecked ? "checked" : "unchecked"; 
-    await updateDoc(routineRef, { checkboxStates: routine.checkboxStates });
-  }
+  await updateDoc(routineRef, { checkboxStates });
 };
 
 
