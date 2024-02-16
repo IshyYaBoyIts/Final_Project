@@ -56,7 +56,7 @@ function TaskList() {
                 onClick={() => toggleTaskStatus(task.id, task.isComplete)}
                 className={`mark-complete-button ${task.isComplete ? 'complete' : 'incomplete'}`}
               >
-                {task.isComplete ? 'Complete' : 'Incomplete'}
+                {task.isComplete ? 'Completed' : 'Incomplete'}
               </button>
             </div>
           </div>
