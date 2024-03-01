@@ -25,8 +25,10 @@ export const logout = () => {
 };
 
 // NOTIFICATIONS
-export const createNotification = async (notification) => {
-  const notificationsRef = collection(db, 'notifications');
+export const createNotification = async (userId, notification) => {
+  const userDocRef = doc(db, 'users', userId);
+  const notificationsRef = collection(userDocRef, 'notifications');
+  
   await addDoc(notificationsRef, {
     ...notification,
     timestamp: serverTimestamp(),
@@ -36,16 +38,16 @@ export const createNotification = async (notification) => {
 
 // Fetch notifications for a specific user
 export const getNotifications = async (userId) => {
-  const notificationsRef = collection(db, 'notifications');
-  const q = query(notificationsRef, where('userId', '==', userId), orderBy('timestamp', 'desc'));
+  const userNotificationsRef = collection(db, `users/${userId}/notifications`);
+  const q = query(userNotificationsRef, orderBy('timestamp', 'desc'));
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
 // Update the read status of a specific notification
-export const updateNotificationStatus = async (notificationId, readStatus) => {
-  const notificationRef = doc(db, 'notifications', notificationId);
-  await updateDoc(notificationRef, { readStatus: readStatus });
+export const updateNotificationStatus = async (userId, notificationId, readStatus) => {
+  const notificationRef = doc(db, `users/${userId}/notifications`, notificationId);
+  await updateDoc(notificationRef, { readStatus });
 };
 
 // TASK DB FUNCTIONS
