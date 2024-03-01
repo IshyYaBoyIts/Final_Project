@@ -1,42 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { auth, logout, getNotifications } from '../firebase/firebase-config'; 
-import NotificationsPopup from '../notifications/NotificationsPopup';
+import { logout } from '../firebase/firebase-config';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faRightFromBracket, faBell } from '@fortawesome/free-solid-svg-icons';
 import './styles/Header.css';
 
-function Header() {
+function Header({ user, togglePopup }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [user, setUser] = useState(null);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
-      setUser(firebaseUser);
-    });
-
-    // Fetch notifications for the logged-in user
-    if (user) {
-      getNotifications(user.uid).then(setNotifications); // Implement getNotifications in firebase-config
-    }
-
-    return () => unsubscribe();
-  }, [user]);
-
-  const toggleNotificationsPopup = () => {
-    setShowNotifications(!showNotifications);
-  };
 
   const handleBack = () => {
-    navigate(-1); // Go back in the history stack
+    navigate(-1);
   };
 
   const handleLogout = () => {
     logout().then(() => {
-      navigate('/'); // Redirect to home after logout
+      navigate('/');
     });
   };
 
@@ -48,15 +27,12 @@ function Header() {
         </button>
       )}
       <h1>Happy Habits</h1>
-      {location.pathname === '/' && user && (
-        <>
-          <button onClick={toggleNotificationsPopup} className="notifications-button">
-            <FontAwesomeIcon icon={faBell} />
-          </button>
-          {showNotifications && <NotificationsPopup notifications={notifications} onClose={() => setShowNotifications(false)} />}
-        </>
+      {user && location.pathname === '/' && (
+        <button onClick={togglePopup} className="notification-button">
+          <FontAwesomeIcon icon={faBell} />
+        </button>
       )}
-      {location.pathname === '/profile' && user && (
+      {location.pathname === '/profile' && (
         <button onClick={handleLogout} className="logout-button">
           <FontAwesomeIcon icon={faRightFromBracket} />
         </button>

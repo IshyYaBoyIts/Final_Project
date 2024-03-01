@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, updateDoc, addDoc, collection, query, getDocs, where, orderBy, serverTimestamp  } from 'firebase/firestore';
+import { getFirestore, doc, updateDoc, addDoc, collection, query, getDocs, orderBy, serverTimestamp  } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
 // Firebase configuration
@@ -26,8 +26,7 @@ export const logout = () => {
 
 // NOTIFICATIONS
 export const createNotification = async (userId, notification) => {
-  const userDocRef = doc(db, 'users', userId);
-  const notificationsRef = collection(userDocRef, 'notifications');
+  const notificationsRef = collection(db, `users/${userId}/notifications`);
   
   await addDoc(notificationsRef, {
     ...notification,
@@ -71,6 +70,11 @@ export const getTasksFromDB = async (userId) => {
 export const updateTaskStatusInDB = async (userId, taskId, isComplete) => {
   const taskDocRef = doc(db, `users/${userId}/tasks`, taskId);
   await updateDoc(taskDocRef, { isComplete });
+
+  // Create a notification upon task status update
+  createNotification(userId, {
+    message: `Task ${taskId} status updated to ${isComplete ? 'complete' : 'incomplete'}.`,
+  });
 };
 
 // ROUTINE DB FUNCITONS
@@ -127,6 +131,11 @@ export const getRoutinesFromDB = async (userId) => {
 export const updateRoutineCheckboxStates = async (userId, routineId, checkboxStates) => {
   const routineRef = doc(db, `users/${userId}/routines`, routineId);
   await updateDoc(routineRef, { checkboxStates });
+
+  // Create a notification upon routine update
+  createNotification(userId, {
+    message: `Routine ${routineId} has been updated.`,
+  });
 };
 
 export { db, auth, googleAuthProvider };
