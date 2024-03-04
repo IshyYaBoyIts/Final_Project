@@ -26,14 +26,19 @@ export const logout = () => {
 
 // NOTIFICATIONS
 export const createNotification = async (userId, notification) => {
-  const notificationsRef = collection(db, `users/${userId}/notifications`);
-  
-  await addDoc(notificationsRef, {
-    ...notification,
-    timestamp: serverTimestamp(),
-    readStatus: false
-  });
+  try {
+    const notificationsRef = collection(db, `users/${userId}/notifications`);
+    await addDoc(notificationsRef, {
+      ...notification,
+      timestamp: serverTimestamp(),
+      readStatus: false
+    });
+    console.log("Notification created successfully");
+  } catch (error) {
+    console.error("Error creating notification:", error);
+  }
 };
+
 
 // Fetch notifications for a specific user
 export const getNotifications = async (userId) => {

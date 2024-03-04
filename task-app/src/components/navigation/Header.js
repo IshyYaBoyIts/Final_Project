@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faRightFromBracket, faBell } from '@fortawesome/free-solid-svg-icons';
 import './styles/Header.css';
 
-function Header({ user, togglePopup }) {
+function Header({ togglePopup }) { // Assuming togglePopup is passed as a prop for triggering the notification popup
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -27,11 +27,9 @@ function Header({ user, togglePopup }) {
         </button>
       )}
       <h1>Happy Habits</h1>
-      {user && location.pathname === '/' && (
-        <button onClick={togglePopup} className="notification-button">
-          <FontAwesomeIcon icon={faBell} />
-        </button>
-      )}
+      <button onClick={togglePopup} className="notification-button">
+        <FontAwesomeIcon icon={faBell} />
+      </button>
       {location.pathname === '/profile' && (
         <button onClick={handleLogout} className="logout-button">
           <FontAwesomeIcon icon={faRightFromBracket} />
