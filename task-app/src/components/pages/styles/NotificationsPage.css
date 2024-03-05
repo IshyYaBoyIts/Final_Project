@@ -1,0 +1,44 @@
+/* NotificationsPage.css */
+
+.notifications-page {
+    background-color: var(--tertiary-color); 
+    border-radius: 8px;
+    width: 95%;
+    max-width: 600px; 
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+}
+
+.notifications-list {
+    margin-top: 20px;
+}
+
+.notification {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.notification.read {
+    background-color: #e7e7e7;
+}
+
+.notification.unread {
+    background-color: #fff;
+}
+
+.notification-actions {
+    display: flex;
+    gap: 10px; 
+}
+
+.notification p {
+    margin: 0;
+    flex: 1; 
+}

@@ -2,13 +2,13 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './styles/NavBar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faUser, faChartSimple } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faUser, faTrophy, } from '@fortawesome/free-solid-svg-icons';
 
 const NavBar = () => {
   const location = useLocation();
 
   // Handler functions for logging
-  const logStatisticsClick = () => console.log('Statistics clicked');
+  const logAchievementsClick = () => console.log('Achievements clicked');
   const logAddItemClick = () => console.log('Add Item clicked');
   const logProfileClick = () => console.log('Profile clicked');
 
@@ -19,8 +19,8 @@ const NavBar = () => {
 
   return (
     <nav className="nav-bar">
-      <Link to="/statistics" className="other-button" onClick={logStatisticsClick}>
-        <FontAwesomeIcon icon={faChartSimple} />
+      <Link to="/achievements" className="other-button" onClick={logAchievementsClick}>
+        <FontAwesomeIcon icon={faTrophy} />
       </Link>
       <Link to="/add-item" className="add-button" onClick={logAddItemClick}>
         <FontAwesomeIcon icon={faPlus} />

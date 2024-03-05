@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faRightFromBracket, faBell } from '@fortawesome/free-solid-svg-icons';
 import './styles/Header.css';
 
-function Header({ togglePopup }) { // Assuming togglePopup is passed as a prop for triggering the notification popup
+function Header() { 
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -18,6 +18,10 @@ function Header({ togglePopup }) { // Assuming togglePopup is passed as a prop f
       navigate('/');
     });
   };
+  // Navigate to notifications page
+  const handleNotificationsClick = () => {
+    navigate('/notifications');
+  };
 
   return (
     <header className="app-header">
@@ -27,7 +31,7 @@ function Header({ togglePopup }) { // Assuming togglePopup is passed as a prop f
         </button>
       )}
       <h1>Happy Habits</h1>
-      <button onClick={togglePopup} className="notification-button">
+      <button onClick={handleNotificationsClick} className="notification-button">
         <FontAwesomeIcon icon={faBell} />
       </button>
       {location.pathname === '/profile' && (

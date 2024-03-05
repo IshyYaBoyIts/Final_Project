@@ -1,0 +1,53 @@
+/* AchievementsPage.css */
+.achievements-page {
+  padding: 20px;
+  max-width: 600px;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.achievement-container {
+  background-color: var(--tertiary-color); 
+  border-radius: 8px;
+  width: 95%;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+.achievement {
+  margin-bottom: 30px;
+}
+
+.achievement-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.trophy {
+  font-size: 50px; 
+  margin-top: 10px;
+}
+
+  .trophy.grey {
+    color: rgb(10, 10, 10);
+  }
+  
+  .trophy.bronze {
+    color: #cd7f32; /* Bronze color */
+    font-size: 60px;
+  }
+  
+  .trophy.silver {
+    color: #d3caca; /* Silver color */
+    font-size: 70px;
+  }
+  
+  .trophy.gold {
+    color: #ffd700; /* Gold color */
+    font-size: 80px;
+  }
+  

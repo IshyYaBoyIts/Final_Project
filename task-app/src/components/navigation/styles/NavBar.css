@@ -14,8 +14,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   background-color: #007bff;
   border-radius: 50%;
   color: white;
@@ -27,7 +27,7 @@
 
 .add-button {
   position: absolute;
-  bottom: 20px; /* Raise above the nav bar */
+  bottom: 1px; /* Raise above the nav bar */
   left: 50%;
   transform: translateX(-50%);
 }

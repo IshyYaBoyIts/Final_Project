@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, doc, updateDoc, addDoc, collection, query, getDocs, orderBy, serverTimestamp  } from 'firebase/firestore';
+import { getFirestore, doc, updateDoc, addDoc, getDoc,deleteDoc, setDoc, collection, query, getDocs, orderBy, serverTimestamp, increment  } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
 // Firebase configuration
@@ -39,7 +39,6 @@ export const createNotification = async (userId, notification) => {
   }
 };
 
-
 // Fetch notifications for a specific user
 export const getNotifications = async (userId) => {
   const userNotificationsRef = collection(db, `users/${userId}/notifications`);
@@ -53,6 +52,84 @@ export const updateNotificationStatus = async (userId, notificationId, readStatu
   const notificationRef = doc(db, `users/${userId}/notifications`, notificationId);
   await updateDoc(notificationRef, { readStatus });
 };
+// Update the read status all notifications
+export const markNotificationAsReadOrUnread = async (userId, notificationId, shouldBeRead) => {
+  try {
+    const notificationRef = doc(db, `users/${userId}/notifications`, notificationId);
+    await updateDoc(notificationRef, { readStatus: shouldBeRead });
+    console.log("Notification read status updated successfully");
+  } catch (error) {
+    console.error("Error updating notification read status:", error);
+  }
+};
+// Delete all notification
+export const deleteNotification = async (userId, notificationId) => {
+  const notificationRef = doc(db, `users/${userId}/notifications`, notificationId);
+  await deleteDoc(notificationRef); // Ensure deleteDoc is imported
+};
+
+// ACHIEVEMENTS
+
+// Function to get user achievements
+export const getUserAchievements = async (userId) => {
+  const achievementsRef = doc(db, 'users', userId, 'achievements', 'current');
+  const docSnap = await getDoc(achievementsRef);
+  if (docSnap.exists()) {
+      return docSnap.data();
+  } else {
+      // If no achievements found, create initial achievements
+      await setDoc(achievementsRef, { tasksCompleted: 0, routinesCompleted: 0 });
+      return { tasksCompleted: 0, routinesCompleted: 0 };
+  }
+};
+
+// Function to update achievements based on different actions
+export const updateAchievements = async (userId, actionType) => {
+  const achievementsRef = doc(db, 'users', userId, 'achievements', 'current');
+  let updateObject = {};
+
+  switch (actionType) {
+    case 'addTask':
+      updateObject = { tasksAdded: increment(1) };
+      break;
+    case 'completeTask':
+      updateObject = { tasksCompleted: increment(1) };
+      break;
+    case 'incompleteTask':
+      updateObject = { tasksCompleted: increment(-1) };
+      break;
+    case 'addRoutine':
+      updateObject = { routinesAdded: increment(1) };
+      break;
+    // ... include cases for other types of achievements as needed ...
+    default:
+      console.log('Unknown action type for achievements.');
+  }
+
+  try {
+    if (Object.keys(updateObject).length > 0) {
+      await updateDoc(achievementsRef, updateObject);
+    }
+  } catch (error) {
+    console.error('Error updating achievements:', error);
+  }
+};
+
+// Function to increment tasks completed in achievements
+export const incrementTasksCompleted = async (userId) => {
+  const achievementsRef = doc(db, 'users', userId, 'achievements', 'current');
+  await updateDoc(achievementsRef, {
+    tasksCompleted: increment(1)
+  });
+};
+
+// Function to decrement tasks completed in achievements
+export const decrementTasksCompleted = async (userId) => {
+  const achievementsRef = doc(db, 'users', userId, 'achievements', 'current');
+  await updateDoc(achievementsRef, {
+    tasksCompleted: increment(-1) // Use increment with a negative value to decrement
+  });
+};
 
 // TASK DB FUNCTIONS
 
@@ -61,10 +138,17 @@ export const addTaskToDB = async (userId, newTask) => {
     const taskWithCompletion = { ...newTask, isComplete: false };
     const docRef = await addDoc(collection(db, `users/${userId}/tasks`), taskWithCompletion);
     console.log("Task added with ID:", docRef.id);
+    // Update achievements for adding task
+    await updateAchievements(userId, 'addTask');
+    // Create a notification for task creation
+    await createNotification(userId, {
+      message: `New task "${newTask.name}" has been created.`,
+    });
   } catch (error) {
     console.error("Error adding task:", error);
   }
 };
+
 
 export const getTasksFromDB = async (userId) => {
   const q = query(collection(db, `users/${userId}/tasks`));
@@ -74,13 +158,33 @@ export const getTasksFromDB = async (userId) => {
 
 export const updateTaskStatusInDB = async (userId, taskId, isComplete) => {
   const taskDocRef = doc(db, `users/${userId}/tasks`, taskId);
-  await updateDoc(taskDocRef, { isComplete });
+  const docSnap = await getDoc(taskDocRef);
+  
+  if (docSnap.exists()) {
+    const taskData = docSnap.data(); // This line was missing
+    const taskName = taskData.name; // Correctly define taskName from the task's data
+    await updateDoc(taskDocRef, { isComplete });
 
-  // Create a notification upon task status update
-  createNotification(userId, {
-    message: `Task ${taskId} status updated to ${isComplete ? 'complete' : 'incomplete'}.`,
-  });
+    // If the task is completed, increment the count, otherwise decrement
+    if (isComplete) {
+      await incrementTasksCompleted(userId);
+      await createNotification(userId, {
+        message: `Task "${taskName}" completed.`,
+      });
+    } else {
+      // Call decrementTasksCompleted only if the task was previously completed
+      if (taskData.isComplete) {
+        await decrementTasksCompleted(userId);
+      }
+      await createNotification(userId, {
+        message: `Task "${taskName}" marked as incomplete.`,
+      });
+    }
+  } else {
+    console.log("No such task!");
+  }
 };
+
 
 // ROUTINE DB FUNCITONS
 
@@ -108,23 +212,25 @@ export const getCheckboxCount = (routine) => {
 };
 
 export const addRoutineToDB = async (userId, newRoutine) => {
-  const checkboxCount = getCheckboxCount(newRoutine); 
-  const initialCheckboxStates = Array(checkboxCount).fill("unchecked");
-
-  const routineToAdd = {
-    ...newRoutine,
-    checkboxStates: initialCheckboxStates,
-    createdAt: new Date().toISOString()
-  };
-
   try {
+    const checkboxCount = getCheckboxCount(newRoutine);
+    const initialCheckboxStates = Array(checkboxCount).fill("unchecked");
+    const routineToAdd = {
+      ...newRoutine,
+      checkboxStates: initialCheckboxStates,
+      createdAt: new Date().toISOString()
+    };
     const docRef = await addDoc(collection(db, `users/${userId}/routines`), routineToAdd);
     console.log("Routine added with ID:", docRef.id);
+    // Create a notification for routine creation
+    await createNotification(userId, {
+      message: `New routine "${newRoutine.name}" has been created.`,
+    });
   } catch (error) {
     console.error("Error adding routine:", error);
-    throw new Error("Failed to add the routine to the database.");
   }
 };
+
 
 
 export const getRoutinesFromDB = async (userId) => {
@@ -135,12 +241,18 @@ export const getRoutinesFromDB = async (userId) => {
 
 export const updateRoutineCheckboxStates = async (userId, routineId, checkboxStates) => {
   const routineRef = doc(db, `users/${userId}/routines`, routineId);
-  await updateDoc(routineRef, { checkboxStates });
-
-  // Create a notification upon routine update
-  createNotification(userId, {
-    message: `Routine ${routineId} has been updated.`,
-  });
+  const docSnap = await getDoc(routineRef);
+  if (docSnap.exists()) {
+    const routineName = docSnap.data().name; // Assuming the routine object has a name field
+    await updateDoc(routineRef, { checkboxStates });
+    // Use routine name in the notification message
+    await createNotification(userId, {
+      message: `Routine "${routineName}" has been updated.`,
+    });
+  } else {
+    console.log("No such routine!");
+  }
 };
+
 
 export { db, auth, googleAuthProvider };

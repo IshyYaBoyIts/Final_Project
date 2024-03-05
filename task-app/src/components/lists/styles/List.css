@@ -1,18 +1,12 @@
-.empty-list {
-  border: 2px dashed #ccc; /* Dashed border for the empty box */
-  border-radius: 8px; /* Curved corners */
-  text-align: center;
-  padding: 20px;
-  margin: 20px;
-  color: #999;
-}
 
-.task-list, .routine-list {
+.task-list, .routine-list, .empty-list {
   background-color: var(--tertiary-color); /* Tertiary color as background */
   width: 95%; /* Fill 9% of its container's width */
   margin: 10px auto; /* Center the list */
   padding: 10px 0; /* Padding top and bottom */
   border-radius: 8px; /* Curved corners for the list */
+  max-height: calc(100vh - 230px); /* Adjust 50px to your bottom nav's actual height */
+  overflow-y: auto;
 }
 
 .list-item {
