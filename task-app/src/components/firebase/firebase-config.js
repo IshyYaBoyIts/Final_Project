@@ -149,7 +149,6 @@ export const addTaskToDB = async (userId, newTask) => {
   }
 };
 
-
 export const getTasksFromDB = async (userId) => {
   const q = query(collection(db, `users/${userId}/tasks`));
   const querySnapshot = await getDocs(q);
@@ -185,6 +184,10 @@ export const updateTaskStatusInDB = async (userId, taskId, isComplete) => {
   }
 };
 
+export const deleteTask = async (userId, taskId) => {
+  const taskRef = doc(db, `users/${userId}/tasks`, taskId);
+  await deleteDoc(taskRef);
+};
 
 // ROUTINE DB FUNCITONS
 
@@ -231,8 +234,6 @@ export const addRoutineToDB = async (userId, newRoutine) => {
   }
 };
 
-
-
 export const getRoutinesFromDB = async (userId) => {
   const q = query(collection(db, `users/${userId}/routines`));
   const querySnapshot = await getDocs(q);
@@ -254,5 +255,9 @@ export const updateRoutineCheckboxStates = async (userId, routineId, checkboxSta
   }
 };
 
+export const deleteRoutine = async (userId, taskId) => {
+  const routineRef = doc(db, `users/${userId}/routines`, taskId);
+  await deleteDoc(routineRef);
+};
 
 export { db, auth, googleAuthProvider };

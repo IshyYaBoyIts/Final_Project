@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../firebase/AuthContext.js'; 
-import { getTasksFromDB, updateTaskStatusInDB } from '../firebase/firebase-config.js'; // Ensure you have this function in your firebase-config.js
+import { getTasksFromDB, updateTaskStatusInDB, deleteTask } from '../firebase/firebase-config.js'; // Ensure you have this function in your firebase-config.js
 import './styles/List.css';
 
 function TaskList() {
@@ -34,6 +34,24 @@ function TaskList() {
       });
   };
   
+  const handleDeleteTask = async (taskId) => {
+    await deleteTask(currentUser.uid, taskId);
+    // Refresh the task list
+    getTasksFromDB(currentUser.uid).then(fetchedTasks => {
+      setTasks(fetchedTasks);
+    });
+  };
+  
+  const handleDeleteAllTasks = async () => {
+    for (const task of tasks) {
+      await deleteTask(currentUser.uid, task.id);
+    }
+    // Assume all tasks are now deleted, refresh list
+    getTasksFromDB(currentUser.uid).then(fetchedTasks => {
+      setTasks(fetchedTasks);
+    });
+  };
+  
 
   if (tasks.length === 0) {
     return <div className="empty-list">You have no Tasks</div>;
@@ -41,6 +59,11 @@ function TaskList() {
 
   return (
     <div className="task-list">
+    <div className="delete-all-container">
+    {tasks.length > 0 && (
+      <button className="delete-all-button" onClick={handleDeleteAllTasks}>Delete All Tasks</button>
+    )}
+    </div>
       {tasks.map((task) => (
         <div key={task.id} className="list-item">
           <div className="list-item-inner">
@@ -51,13 +74,13 @@ function TaskList() {
                 <p className="item-category">{task.tag}</p>
                 <p className="item-due-date">Due Date: {task.date}</p>
               </div>
-              <div className={`status-indicator ${task.isComplete ? 'complete' : 'incomplete'}`}></div>
               <button
                 onClick={() => toggleTaskStatus(task.id, task.isComplete)}
                 className={`mark-complete-button ${task.isComplete ? 'complete' : 'incomplete'}`}
               >
                 {task.isComplete ? 'Completed' : 'Incomplete'}
               </button>
+              <button className="delete-button" onClick={() => handleDeleteTask(task.id)}>Delete</button>
             </div>
           </div>
         </div>

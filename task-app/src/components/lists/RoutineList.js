@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
 import { AuthContext } from '../firebase/AuthContext';
-import { getRoutinesFromDB, updateRoutineCheckboxStates, getCheckboxCount } from '../firebase/firebase-config';
+import { getRoutinesFromDB, updateRoutineCheckboxStates, getCheckboxCount, deleteRoutine } from '../firebase/firebase-config';
 import './styles/List.css';
 
 function RoutineList() {
@@ -45,8 +45,31 @@ function RoutineList() {
     }
   };
 
+  const handleDeleteRoutine = async (routineId) => {
+    await deleteRoutine(currentUser.uid, routineId);
+    // Refresh the task list
+    getRoutinesFromDB(currentUser.uid).then(fetchedRoutines => {
+      setRoutines(fetchedRoutines);
+    });
+  };
+  
+  const handleDeleteAllRoutines = async () => {
+    for (const routine of routines) {
+      await deleteRoutine(currentUser.uid, routine.id);
+    }
+    // Assume all tasks are now deleted, refresh list
+    getRoutinesFromDB(currentUser.uid).then(fetchedRoutines => {
+      setRoutines(fetchedRoutines);
+    });
+  };
+
   return (
     <div className="routine-list">
+    <div className="delete-all-container">
+    {routines.length > 0 && (
+      <button className="delete-all-button" onClick={handleDeleteAllRoutines}>Delete All Routines</button>
+    )}
+    </div>
       {routines.length === 0 ? (
         <div className="empty-list">You have no Routines</div>
       ) : (
@@ -77,6 +100,9 @@ function RoutineList() {
                           onChange={() => handleCheckboxChange(routine.id, i)}
                         />
                       ))}
+                    </div>
+                    <div>
+                    <button className="delete-button" onClick={() => handleDeleteRoutine(routine.id)}>Delete</button>
                     </div>
                   </div>
                 </div>

@@ -134,3 +134,39 @@
 .routine-checkbox:hover {
   background-color:#4CAF50; /* Amber glow */
 }
+
+.delete-all-container {
+  display: flex;
+  justify-content: center; /* Center the button horizontally */
+  padding: 10px 0; /* Add some vertical padding */
+}
+.delete-all-button {
+    cursor: pointer;
+    padding: 10px 20px; /* Adjust padding as needed */
+    border-radius: 20px; /* Rounded corners for aesthetic */
+    border: none; /* No border for a cleaner look */
+    background-color: #ffcccc; /* Light red background */
+    color: white; /* White text for contrast */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+.delete-button {
+  cursor: pointer;
+  padding: 10px 20px; /* Adjust padding as needed */
+  border-radius: 20px; /* Rounded corners for aesthetic */
+  border: none; /* No border for a cleaner look */
+  background-color: #ffcccc; /* Light red background */
+  color: white; /* White text for contrast */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  right: 10px; /* Positioned to the right */
+  position: absolute; /* Absolute position relative to its parent */
+  right: 20px; /* Positioned to the right */
+  top: 50%; /* Positioned halfway down the parent */
+  transform: translateY(50%); /* Offset the button by half its height to center */
+}
+
+.delete-button:hover {
+  background-color: #ff5c5c; /* Darker red on hover */
+}
+.delete-all-button:hover {
+  background-color: #ff5c5c; /* Darker red on hover */
+}
