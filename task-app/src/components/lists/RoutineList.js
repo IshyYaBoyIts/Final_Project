@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
 import { AuthContext } from '../firebase/AuthContext';
 import { getRoutinesFromDB, updateRoutineCheckboxStates, getCheckboxCount, deleteRoutine } from '../firebase/firebase-config';
+import { useNavigate } from 'react-router-dom';
 import './styles/List.css';
 
 function RoutineList() {
   const { currentUser } = useContext(AuthContext);
   const [routines, setRoutines] = useState([]);
+  const navigate = useNavigate();
 
   // This will hold the checked state for each checkbox of every routine
   // eslint-disable-next-line
@@ -43,6 +45,10 @@ function RoutineList() {
         const updatedRoutines = routines.map(r => r.id === routineId ? {...r, checkboxStates: updatedCheckboxStates} : r);
         setRoutines(updatedRoutines);
     }
+  };
+
+  const handleEditRoutine = (routineId) => {
+    navigate(`/editRoutine/${routineId}`); // Navigate to the edit routine page
   };
 
   const handleDeleteRoutine = async (routineId) => {
@@ -102,6 +108,7 @@ function RoutineList() {
                       ))}
                     </div>
                     <div>
+                    <button className="edit-button" onClick={() => handleEditRoutine(routine.id)}>Edit</button>
                     <button className="delete-button" onClick={() => handleDeleteRoutine(routine.id)}>Delete</button>
                     </div>
                   </div>

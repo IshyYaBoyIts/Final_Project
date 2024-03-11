@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../firebase/AuthContext.js'; 
 import { getTasksFromDB, updateTaskStatusInDB, deleteTask } from '../firebase/firebase-config.js'; // Ensure you have this function in your firebase-config.js
+import { useNavigate } from 'react-router-dom';
 import './styles/List.css';
 
 function TaskList() {
   const { currentUser } = useContext(AuthContext);
   const [tasks, setTasks] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (currentUser) {
       getTasksFromDB(currentUser.uid).then(fetchedTasks => {
@@ -34,6 +35,10 @@ function TaskList() {
       });
   };
   
+  const handleEditTask = (taskId) => {
+    navigate(`/editTask/${taskId}`); // Navigate to the edit task page
+  };
+
   const handleDeleteTask = async (taskId) => {
     await deleteTask(currentUser.uid, taskId);
     // Refresh the task list
@@ -80,6 +85,7 @@ function TaskList() {
               >
                 {task.isComplete ? 'Completed' : 'Incomplete'}
               </button>
+              <button className="edit-button" onClick={() => handleEditTask(task.id)}>Edit</button>
               <button className="delete-button" onClick={() => handleDeleteTask(task.id)}>Delete</button>
             </div>
           </div>

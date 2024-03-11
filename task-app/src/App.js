@@ -12,6 +12,8 @@ import './App.css';
 import ThemedAppWrapper from './components/theme/ThemedAppWrapper';
 import NotificationsPage from './components/pages/NotificationsPage';
 import AchievementsPage from './components/pages/AchievementsPage';
+import TaskEditPage from './components/lists/edit/EditTask';
+import RoutineEditPage from './components/lists/edit/EditRoutine';
 
 const App = () => {
   const [currentView, setCurrentView] = useState('tasks');
@@ -35,6 +37,8 @@ const App = () => {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/achievements" element={<AchievementsPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/editTask/:taskId" element={<TaskEditPage />} />
+            <Route path="/editRoutine/:routineId" element={<RoutineEditPage />} />
           </Routes>
         </ThemedAppWrapper>
       </Router>
