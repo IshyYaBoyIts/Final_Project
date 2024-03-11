@@ -4,7 +4,7 @@ import { getRoutineById, updateRoutineInDB } from '../../firebase/firebase-confi
 import { AuthContext } from '../../firebase/AuthContext';
 import VoiceRecognition from '../../voiceUtils/VoiceRecognitionTask';
 import { processTranscript } from '../../voiceUtils/SpeechProcessing';
-import './styles/EditComponent.css'; // Assuming this CSS file contains the styles you've shared
+import './styles/EditComponent.css';
 
 function RoutineEditPage() {
   const { routineId } = useParams();
