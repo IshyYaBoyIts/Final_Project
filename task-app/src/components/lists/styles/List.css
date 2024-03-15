@@ -124,10 +124,32 @@
   border-radius: 2px;
 }
 
-.delete-all-container {
+.options {
   display: flex;
   justify-content: center;
   padding: 10px 0;
+}
+.filter-buttons {
+  display: flex;
+}
+
+.filter-button{
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  transition: background-color 0.3s;
+  background-color: #f5c173;
+ }
+
+ .selected-filter {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+}
+
+ .selected-filter:hover, .filter-button:hover{
+background-color: #ff9800;
 }
 
 .delete-all-button {

@@ -41,6 +41,14 @@ function TaskList() {
     getTasksFromDB(currentUser.uid).then(fetchedTasks => setTasks(fetchedTasks));
   };
 
+  const handleToggleTaskStatus = async (taskId, isComplete) => {
+    try {
+      await toggleTaskStatus(taskId, isComplete);
+    } catch (error) {
+      console.error("Failed to toggle task status:", error);
+      // Optionally, show a user-friendly error message or perform other error handling here
+    }
+  };
   // Filter tasks based on the selected filter
   const filteredTasks = tasks.filter(task => {
     if (filter === 'completed') return task.isComplete;
@@ -52,10 +60,26 @@ function TaskList() {
     <div className="task-list">
       <div className="options">
         <div className="filter-buttons">
-          <button onClick={() => setFilter('all')}>All</button>
-          <button onClick={() => setFilter('completed')}>Completed</button>
-          <button onClick={() => setFilter('incomplete')}>Incomplete</button>
-        </div>{tasks.length > 0 && (
+          <button
+            className={`filter-button ${filter === 'all' ? 'selected-filter' : ''}`}
+            onClick={() => setFilter('all')}
+          >
+            All
+          </button>
+          <button
+            className={`filter-button ${filter === 'completed' ? 'selected-filter' : ''}`}
+            onClick={() => setFilter('completed')}
+          >
+            Completed
+          </button>
+          <button
+            className={`filter-button ${filter === 'incomplete' ? 'selected-filter' : ''}`}
+            onClick={() => setFilter('incomplete')}
+          >
+            Incomplete
+          </button>
+        </div>
+        {tasks.length > 0 && (
         <div className="delete-all-container">
           <button className="delete-all-button" onClick={handleDeleteAllTasks}>Delete All Tasks</button>
         </div>
@@ -75,7 +99,7 @@ function TaskList() {
                   <p className="item-due-date">Due Date: {task.date}</p>
                 </div>
                 <button
-                  onClick={() => toggleTaskStatus(task.id, task.isComplete)}
+                  onClick={() => handleToggleTaskStatus(task.id, task.isComplete)}
                   className={`mark-complete-button ${task.isComplete ? 'complete' : 'incomplete'}`}
                 >
                   {task.isComplete ? 'Completed' : 'Incomplete'}

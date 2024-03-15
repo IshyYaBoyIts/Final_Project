@@ -72,10 +72,30 @@ function RoutineList() {
     <div className="routine-list">
       <div className="options">
         <div className="filter-buttons">
-          <button onClick={() => setFilter('all')}>All Routines</button>
-          <button onClick={() => setFilter('incomplete')}>Incomplete Routines</button>
-          <button onClick={() => setFilter('inprogress')}>In Progress Routines</button>
-          <button onClick={() => setFilter('complete')}>Complete Routines</button>
+          <button
+            className={`filter-button ${filter === 'all' ? 'selected-filter' : ''}`}
+            onClick={() => setFilter('all')}
+          >
+            All Routines
+          </button>
+          <button
+            className={`filter-button ${filter === 'incomplete' ? 'selected-filter' : ''}`}
+            onClick={() => setFilter('incomplete')}
+          >
+            Incomplete Routines
+          </button>
+          <button
+            className={`filter-button ${filter === 'inprogress' ? 'selected-filter' : ''}`}
+            onClick={() => setFilter('inprogress')}
+          >
+            In Progress Routines
+          </button>
+          <button
+            className={`filter-button ${filter === 'complete' ? 'selected-filter' : ''}`}
+            onClick={() => setFilter('complete')}
+          >
+            Complete Routines
+          </button>
         </div>
         <div className="delete-all-container">
           {routines.length > 0 && (

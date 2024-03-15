@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { getNotifications, markNotificationAsReadOrUnread, deleteNotification } from '../firebase/firebase-config';
+import { getNotifications, markNotificationAsReadOrUnread, deleteNotification, db } from '../firebase/firebase-config';
+import { writeBatch, collection, getDocs } from 'firebase/firestore';
 import { AuthContext } from '../firebase/AuthContext';
 import './styles/NotificationsPage.css';
 
@@ -26,12 +27,33 @@ const NotificationsPage = () => {
     };
 
     const handleToggleAllReadStatus = async () => {
-        for (const notification of notifications) {
-            await markNotificationAsReadOrUnread(currentUser.uid, notification.id, true);
+        const notificationsRef = collection(db, `users/${currentUser.uid}/notifications`);
+        const querySnapshot = await getDocs(notificationsRef);
+    
+        // Initialize Firestore batch
+        const batch = writeBatch(db);
+        let allRead = true; // Assume all notifications are read initially
+    
+        // Check if at least one notification is unread
+        querySnapshot.forEach(doc => {
+            if (!doc.data().readStatus) {
+                allRead = false;
+            }
+        });
+    
+        querySnapshot.forEach((doc) => {
+            batch.update(doc.ref, { readStatus: !allRead }); 
+        });
+    
+        try {
+            await batch.commit();
+            console.log(`All notifications have been marked as ${allRead ? 'unread' : 'read'}`);
+            // Refresh notifications list
+            getNotifications(currentUser.uid).then(setNotifications);
+        } catch (error) {
+            console.error("Error updating notifications' read status:", error);
         }
-        // Assume all notifications are now read, refresh list
-        getNotifications(currentUser.uid).then(setNotifications);
-    };
+    };  
 
     const handleDeleteAll = async () => {
         for (const notification of notifications) {
