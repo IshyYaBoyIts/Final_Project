@@ -1,7 +1,6 @@
-// App.js
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './components/firebase/AuthContext'; // Adjust the import path as necessary
+import { AuthProvider } from './components/firebase/AuthContext'; 
 import Header from './components/navigation/Header';
 import NavBar from './components/navigation/NavBar';
 import TaskList from './components/lists/TaskList';
@@ -11,6 +10,10 @@ import Tabs from './components/navigation/Tabs';
 import ProfilePage from './components/pages/ProfilePage';
 import './App.css';
 import ThemedAppWrapper from './components/theme/ThemedAppWrapper';
+import NotificationsPage from './components/pages/NotificationsPage';
+import AchievementsPage from './components/pages/AchievementsPage';
+import TaskEditPage from './components/lists/edit/EditTask';
+import RoutineEditPage from './components/lists/edit/EditRoutine';
 
 const App = () => {
   const [currentView, setCurrentView] = useState('tasks');
@@ -20,7 +23,7 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
-      <ThemedAppWrapper>
+        <ThemedAppWrapper>
           <Header />
           <NavBar />
           <Routes>
@@ -32,6 +35,10 @@ const App = () => {
             } />
             <Route path="/add-item" element={<AddItemPage setTasks={setTasks} setRoutines={setRoutines} />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/achievements" element={<AchievementsPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/editTask/:taskId" element={<TaskEditPage />} />
+            <Route path="/editRoutine/:routineId" element={<RoutineEditPage />} />
           </Routes>
         </ThemedAppWrapper>
       </Router>

@@ -1,31 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { auth, logout } from '../firebase/firebase-config'; // Adjust the path as needed
+import { logout } from '../firebase/firebase-config';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faRightFromBracket, faBell } from '@fortawesome/free-solid-svg-icons';
 import './styles/Header.css';
 
-function Header() {
+function Header() { 
   const navigate = useNavigate();
   const location = useLocation();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((firebaseUser) => {
-      setUser(firebaseUser);
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   const handleBack = () => {
-    navigate(-1); // Go back in the history stack
+    navigate(-1);
   };
 
   const handleLogout = () => {
     logout().then(() => {
-      navigate('/'); // Redirect to home after logout
+      navigate('/');
     });
+  };
+  // Navigate to notifications page
+  const handleNotificationsClick = () => {
+    navigate('/notifications');
   };
 
   return (
@@ -36,7 +31,10 @@ function Header() {
         </button>
       )}
       <h1>Happy Habits</h1>
-      {location.pathname === '/profile' && user && (
+      <button onClick={handleNotificationsClick} className="notification-button">
+        <FontAwesomeIcon icon={faBell} />
+      </button>
+      {location.pathname === '/profile' && (
         <button onClick={handleLogout} className="logout-button">
           <FontAwesomeIcon icon={faRightFromBracket} />
         </button>

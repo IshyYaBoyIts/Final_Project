@@ -79,6 +79,20 @@ const ProfilePage = () => {
     }
   };
 
+  const resetAchievements = async () => {
+    if (user) {
+      if (window.confirm("Are you sure you want to reset your achievements? This action cannot be undone.")) {
+        const achievementsRef = doc(db, 'users', user.uid, 'achievements', 'current');
+        try {
+          await setDoc(achievementsRef, { tasksCompleted: 0, routinesCompleted: 0 }); // Resetting to default values
+          console.log("Achievements reset successfully.");
+        } catch (error) {
+          console.error("Error resetting achievements:", error);
+        }
+      }
+    }
+  };
+
   return (
     <div className="profile-page">
       {user ? (
@@ -99,6 +113,9 @@ const ProfilePage = () => {
             </select>
             <input type="text" value={newTag} onChange={(e) => setNewTag(e.target.value)} placeholder="Add new tag" />
             <button onClick={addTag}>Add Tag</button>
+          </div>
+          <div className="profile-item">
+            <button onClick={resetAchievements}>Reset Achievements</button>
           </div>
         </div>
       ) : (

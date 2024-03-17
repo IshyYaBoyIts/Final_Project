@@ -1,142 +1,168 @@
-.empty-list {
-  border: 2px dashed #ccc; /* Dashed border for the empty box */
-  border-radius: 8px; /* Curved corners */
-  text-align: center;
-  padding: 20px;
-  margin: 20px;
-  color: #999;
-}
-
-.task-list, .routine-list {
-  background-color: var(--tertiary-color); /* Tertiary color as background */
-  width: 95%; /* Fill 9% of its container's width */
-  margin: 10px auto; /* Center the list */
-  padding: 10px 0; /* Padding top and bottom */
-  border-radius: 8px; /* Curved corners for the list */
+.task-list, .routine-list, .empty-list {
+  background-color: var(--tertiary-color);
+  width: 95%;
+  margin: 10px auto;
+  padding: 10px 0;
+  border-radius: 8px;
+  max-height: calc(100vh - 230px);
+  overflow-y: auto;
 }
 
 .list-item {
-  position: relative; /* Position relative for absolute child elements */
+  position: relative;
   display: flex;
-  justify-content: space-between; /* Space out the content and button */
+  justify-content: space-between;
   align-items: center;
   width: 95%;
-  margin: 10px 0;
+  margin: 10px auto;
   padding: 10px;
-  border-radius: 8px; /* Rounded corners */
+  border-radius: 8px;
 }
 
 .list-item-inner {
   display: flex;
-  justify-content: space-between; /* Space out the content and status indicator */
+  justify-content: space-between;
   align-items: center;
-  width: 100%; /* Full width of the item */
+  width: 100%;
 }
 
 .item-content {
-  width: 80%; /* Width of the content area */
-  margin: auto; /* Center the content */
-  padding-bottom: 10px; /* Padding at the bottom of each item */
-  border-bottom: 5px solid #e0e0e0; /* Solid color for the separator line */
+  width: 80%;
+  margin: auto;
+  padding-bottom: 10px;
+  border-bottom: 5px solid #e0e0e0;
 }
 
 .item-detail {
   display: flex;
   flex-direction: column;
-  width: 80%; /* Width of the details area */
+  width: 80%;
+}
+
+.item-name, .item-category, .item-due-date, .item-frequency, .item-description {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 2px;
 }
 
 .item-name {
   font-weight: bold;
-  margin-bottom: 4px; /* Space below the name */
+  margin-bottom: 4px;
 }
 
-.item-category, .item-due-date, .item-frequency, item-description {
-  color: #666;
-  font-size: 0.9em;
-  margin-bottom: 2px; /* Space between details */
+.delete-button, .edit-button, .mark-complete-button {
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
+  color: white;
+  font-size: 14px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.delete-button {
+  right: 10px;
+  background-color: #f44336;
+}
+
+.edit-button {
+  right: 70px;
+  background-color: #ff9800;
 }
 
 .mark-complete-button {
-  cursor: pointer;
-  padding: 10px 20px; /* Larger click area */
-  border-radius: 20px; /* Rounded corners */
-  border: none; /* No border */
-  background-color: #4CAF50; /* Green background for 'complete' action */
-  color: white; /* White text color */
-  position: absolute; /* Absolute position relative to its parent */
-  right: 10px; /* Positioned to the right */
-  top: 50%; /* Positioned halfway down the parent */
-  transform: translateY(-50%); /* Offset the button by half its height to center */
-  transition: background-color 0.3s; /* Transition for hover effect */
+  right: 130px;
+  background-color: #4CAF50; /* Default to green, indicating 'complete' */
 }
 
-/* Task button */
-/* Button initially appears as light red */
+/* Styling for incomplete state, override default if task is incomplete */
 .mark-complete-button.incomplete {
-  background-color: #ffcccb; /* Light red background for 'incomplete' action */
+  background-color: #ff6978; /* Pink/red for 'incomplete' */
 }
 
-/* Button turns green when the task is marked as complete */
-.mark-complete-button.complete {
-  background-color: #4CAF50; /* Green background for 'complete' action */
+/* Hover effects maintaining uniform amber glow for all buttons */
+.delete-button:hover, .edit-button:hover, .mark-complete-button:hover {
+  box-shadow: 0 0 8px #ffc107;
 }
 
-/* Hover effect for the incomplete button */
-.mark-complete-button.incomplete:hover {
-  background-color: #ff7f7f; /* Slightly darker red on hover */
-}
-
-/* Hover effect for the complete button */
-.mark-complete-button.complete:hover {
-  background-color: #45a049; /* Slightly darker green on hover */
-}
-
-/* Amber hover effect */
-.mark-complete-button:hover {
-  box-shadow: 0 0 10px #ffc107; /* Amber glow */
-}
-
-/* Routine checkboxes container */
 .checkboxes-container {
-  display: inline-flex; /* Align checkboxes in a row and allow the container to grow with content */
-  gap: 4px; /* Space between checkboxes */
-  background-color: #ff6978; /* Pink background */
-  padding: 4px; /* Padding around checkboxes */
-  border-radius: 4px; /* Rounded corners for the container */
-  margin: 0 auto; /* Center container if needed */
+  display: inline-flex;
+  gap: 4px;
+  background-color: #ff6978;
+  padding: 4px;
+  border-radius: 4px;
+  margin: 0 auto;
 }
 
-/* Individual checkbox styling */
 .routine-checkbox {
   cursor: pointer;
-  appearance: none; /* Remove default styling */
-  width: 20px; /* Checkbox size */
+  appearance: none;
+  width: 20px;
   height: 20px;
-  margin: 0; /* Remove any default margin */
-  border: 2px solid #fff; /* White border for unchecked state */
-  border-radius: 4px; /* Rounded corners for checkbox */
-  background-color: transparent; /* Transparent background for unchecked state */
-  position: relative; /* Positioning context for pseudo-elements */
+  margin: 0;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  background-color: transparent;
+  position: relative;
 }
 
-/* Checked state styling */
 .routine-checkbox:checked {
-  background-color: #4CAF50; /* Green background for checked state */
-  border-color: #fff; /* Green border to match the background */
+  background-color: #4CAF50;
+  border-color: #fff;
 }
 
 .routine-checkbox:checked::before {
-  content: ''; /* Required for pseudo-elements */
+  content: '';
   position: absolute;
   top: 2px;
   left: 2px;
   right: 2px;
   bottom: 2px;
-  background-color: #4CAF50; /* Green background for the checkmark area */
-  border-radius: 2px; /* Slightly rounded corners for the inner element */
+  background-color: #4CAF50;
+  border-radius: 2px;
 }
 
-.routine-checkbox:hover {
-  background-color:#4CAF50; /* Amber glow */
+.options {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+.filter-buttons {
+  display: flex;
+}
+
+.filter-button{
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  transition: background-color 0.3s;
+  background-color: #f5c173;
+ }
+
+ .selected-filter {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+}
+
+ .selected-filter:hover, .filter-button:hover{
+background-color: #ff9800;
+}
+
+.delete-all-button {
+  cursor: pointer;
+  padding: 10px 20px;
+  margin-left: 50px;
+  border-radius: 20px;
+  border: none;
+  background-color: #ffcccc;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.delete-all-button:hover, .delete-button:hover {
+  background-color: #ff5c5c;
 }
