@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getTaskById, updateTaskInDB } from '../../firebase/firebase-config';
+import { getDoc, doc } from 'firebase/firestore';
+import { getTaskById, updateTaskInDB } from '../../firebase/firebase-config'; 
 import { AuthContext } from '../../firebase/AuthContext';
-import VoiceRecognition from '../../voiceUtils/VoiceRecognitionTask';
-import { processTranscript } from '../../voiceUtils/SpeechProcessing';
+import { db } from '../../firebase/firebase-config';
+import VoiceRecognition from '../../voiceUtils/VoiceRecognitionTask'; 
+import { processTranscript } from '../../voiceUtils/SpeechProcessing'; 
 import './styles/EditComponent.css';
 
 function TaskEditPage() {
@@ -17,8 +19,8 @@ function TaskEditPage() {
     tag: '',
     isComplete: false,
   });
-  const [tags, setTags] = useState([]); // State to store user's tags
-  const [selectedTag, setSelectedTag] = useState(''); // State to store the currently selected tag
+  const [tags, setTags] = useState([]);
+  const [selectedTag, setSelectedTag] = useState('');
   const [isListening, setIsListening] = useState(false);
 
   useEffect(() => {
@@ -27,42 +29,65 @@ function TaskEditPage() {
       navigate('/login');
       return;
     }
+
     const fetchTask = async () => {
       const taskData = await getTaskById(currentUser.uid, taskId);
       if (taskData) {
         setTask(taskData);
+        setSelectedTag(taskData.tag);
       } else {
         console.log('Task not found');
-        navigate('/tasks'); // Adjust as needed
+        navigate('/tasks');
+      }
+    };
+
+    const fetchTags = async () => {
+      const tagsDocRef = doc(db, 'users', currentUser.uid, 'tags', 'taskTags');
+      const docSnap = await getDoc(tagsDocRef);
+      if (docSnap.exists() && docSnap.data().tags) {
+        setTags(docSnap.data().tags);
+        if (!selectedTag && docSnap.data().tags.length > 0) {
+          setSelectedTag(docSnap.data().tags[0]);
+        }
+      } else {
+        console.error("Tags not found");
+        setTags([]);
       }
     };
 
     fetchTask();
-  }, [currentUser, taskId, navigate]);
+    fetchTags();
+  }, [currentUser, taskId,selectedTag, navigate]);
 
   const handleTranscriptReceived = (transcript) => {
     const processed = processTranscript(transcript);
     setTask({ ...task, ...processed });
+    if (processed.tag) {
+      setSelectedTag(processed.tag);
+    }
     setIsListening(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await updateTaskInDB(currentUser.uid, taskId, task);
-    navigate('/tasks'); // Adjust as needed
+    await updateTaskInDB(currentUser.uid, taskId, { ...task, tag: selectedTag });
+    navigate('/tasks');
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setTask((prevTask) => ({
-      ...prevTask,
-      [name]: value,
-    }));
+    setTask(prevTask => ({ ...prevTask, [name]: value }));
   };
 
   return (
     <div className="form-item">
       <h2>Edit Task</h2>
+      <VoiceRecognition
+        isListening={isListening}
+        onStart={() => setIsListening(true)}
+        onStop={() => setIsListening(false)}
+        onTranscriptReceived={handleTranscriptReceived}
+      />
       <form onSubmit={handleSubmit} className="form-container">
         <div className="form-group">
           <label htmlFor="name">Task Name:</label>
@@ -99,19 +124,15 @@ function TaskEditPage() {
         <div className="form-group">
           <label htmlFor="tag">Tag:</label>
           <select
+            id="tag"
+            name="tag"
             className="form-control"
             value={selectedTag}
-            onChange={(e) => setSelectedTag(e.target.value)}
+            onChange={e => setSelectedTag(e.target.value)}
           >
-            {tags.length > 0 ? (
-              tags.map((tag, index) => (
-                <option key={index} value={tag}>
-                  {tag}
-                </option>
-              ))
-            ) : (
-              <option value="">No tags available</option>
-            )}
+            {tags.map((tag, index) => (
+              <option key={index} value={tag}>{tag}</option>
+            ))}
           </select>
         </div>
         <button type="submit" className="submit-btn">Save Task</button>
