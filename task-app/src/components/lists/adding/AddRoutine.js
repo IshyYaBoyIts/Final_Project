@@ -1,9 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../../firebase/AuthContext';
 import { addRoutineToDB } from '../../firebase/firebase-config';
+import { useNavigate } from 'react-router-dom';
 import './styles/AddComponent.css';
 
 const RoutineComponent = ({ onRoutineAdded }) => {
+  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const [itemName, setItemName] = useState('');
   const [description, setDescription] = useState('');
@@ -30,6 +32,7 @@ const RoutineComponent = ({ onRoutineAdded }) => {
     try {
       await addRoutineToDB(currentUser.uid, newRoutine);
       onRoutineAdded();
+      navigate('/');
     } catch (error) {
       console.error("Error adding routine:", error);
       alert("Failed to add routine. Please try again.");

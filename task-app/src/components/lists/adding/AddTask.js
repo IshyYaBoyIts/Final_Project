@@ -5,9 +5,11 @@ import VoiceRecognition from '../../voiceUtils/VoiceRecognitionTask';
 import { processTranscript } from '../../voiceUtils/SpeechProcessing';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebase-config'; 
+import { useNavigate } from 'react-router-dom';
 import './styles/AddComponent.css';
 
 const TaskComponent = ({ onTaskAdded }) => {
+  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const [itemName, setItemName] = useState('');
   const [description, setDescription] = useState('');
@@ -64,6 +66,7 @@ const TaskComponent = ({ onTaskAdded }) => {
     try {
       await addTaskToDB(currentUser.uid, newTask);
       onTaskAdded();
+      navigate('/');
     } catch (error) {
       console.error("Error adding task:", error);
       alert("Failed to add task. Please try again.");
