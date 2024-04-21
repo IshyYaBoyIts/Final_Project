@@ -21,7 +21,7 @@ function RoutineEditPage() {
   useEffect(() => {
     if (!currentUser) {
       alert('Please log in to edit routines.');
-      navigate('/login'); // Adjust as needed
+      navigate('/login');
       return;
     }
     const fetchRoutine = async () => {
@@ -30,7 +30,7 @@ function RoutineEditPage() {
         setRoutine(fetchedRoutine);
       } else {
         console.log('Routine not found');
-        navigate('/'); // Adjust as needed
+        navigate('/');
       }
     };
 
@@ -46,7 +46,7 @@ function RoutineEditPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await updateRoutineInDB(currentUser.uid, routineId, routine);
-    navigate('/routines'); // Adjust as needed
+    navigate('/routines'); 
   };
 
   const handleChange = (e) => {

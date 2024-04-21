@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { getUserAchievements } from '../firebase/firebase-config'; // Adjust the path as necessary
-import { AuthContext } from '../firebase/AuthContext'; // Adjust the path as necessary
+import { getUserAchievements } from '../firebase/firebase-config'; 
+import { AuthContext } from '../firebase/AuthContext'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrophy } from '@fortawesome/free-solid-svg-icons';
-import './styles/AchievementsPage.css'; // Assuming you have created a CSS file for styling
+import './styles/AchievementsPage.css';
 
 const AchievementsPage = () => {
   const { currentUser } = useContext(AuthContext);

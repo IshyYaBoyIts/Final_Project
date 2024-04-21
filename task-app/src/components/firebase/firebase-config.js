@@ -160,8 +160,8 @@
     const docSnap = await getDoc(taskDocRef);
     
     if (docSnap.exists()) {
-      const taskData = docSnap.data(); // This line was missing
-      const taskName = taskData.name; // Correctly define taskName from the task's data
+      const taskData = docSnap.data();
+      const taskName = taskData.name; 
       await updateDoc(taskDocRef, { isComplete });
 
       // If the task is completed, increment the count, otherwise decrement
